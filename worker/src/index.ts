@@ -41,7 +41,7 @@ function errorResponse(message: string, status = 400): Response {
 // Phase 2でKV/D1に移行する想定
 // 今は GitHub Pages or R2 に置いた JSON を fetch する
 
-const DATA_BASE_URL = "https://raw.githubusercontent.com/{owner}/{repo}/main/data";
+const DATA_BASE_URL = "https://raw.githubusercontent.com/nightridergsxf-star/loto6-analyzer/main/data";
 
 async function fetchData(filename: string): Promise<unknown> {
 	// Phase 1: ローカルの data/ から直接 import するか、

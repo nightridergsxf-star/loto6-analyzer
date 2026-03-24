@@ -1,6 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+// Phase 1: GitHub raw URLから直接読む
+// Phase 2: Cloudflare Worker API に差し替え
+const DATA_URL =
+  "https://raw.githubusercontent.com/nightridergsxf-star/loto6-analyzer/main/data";
 
 // テーマ定義
 const THEMES = [
@@ -57,6 +62,7 @@ interface Prediction {
   odd_even: { odd: number; even: number };
   high_low: { low: number; high: number };
   score: number;
+  combo_score: number;
   reasons: string[];
 }
 
@@ -66,41 +72,20 @@ interface ThemeResult {
   predictions: Prediction[];
 }
 
-// デモデータ（Phase 1: APIが繋がるまで）
-function generateDemoData(themeKey: string): ThemeResult {
-  const theme = THEMES.find((t) => t.key === themeKey)!;
-  const rng = () => Math.floor(Math.random() * 43) + 1;
-
-  const predictions: Prediction[] = [];
-  for (let i = 0; i < 3; i++) {
-    const nums = new Set<number>();
-    while (nums.size < 6) nums.add(rng());
-    const sorted = [...nums].sort((a, b) => a - b);
-    const odd = sorted.filter((n) => n % 2 === 1).length;
-    const low = sorted.filter((n) => n <= 21).length;
-    predictions.push({
-      numbers: sorted,
-      total: sorted.reduce((a, b) => a + b, 0),
-      odd_even: { odd, even: 6 - odd },
-      high_low: { low, high: 6 - low },
-      score: Math.round((Math.random() * 30 + 30) * 10) / 10,
-      reasons: ["直近ホット番号を含む", "奇偶バランス良好", "合計値が最適帯"],
-    });
-  }
-
-  return {
-    theme: {
-      key: themeKey,
-      name: theme.name,
-      icon: theme.icon,
-      description: theme.description,
-    },
-    top10: Array.from({ length: 10 }, (_, i) => ({
-      number: rng(),
-      score: Math.round((10 - i + Math.random() * 2) * 100) / 100,
-    })),
-    predictions,
+interface Meta {
+  generated_at: string;
+  total_draws: number;
+  latest_draw: {
+    number: number;
+    date: string;
+    numbers: number[];
+    bonus: number;
   };
+}
+
+interface PredictionsData {
+  meta: Meta;
+  themes: ThemeResult[];
 }
 
 // 番号ボール
@@ -123,41 +108,93 @@ function NumberBall({ num, size = "lg" }: { num: number; size?: "sm" | "lg" }) {
 }
 
 export default function Home() {
+  const [data, setData] = useState<PredictionsData | null>(null);
   const [selectedTheme, setSelectedTheme] = useState<string | null>(null);
   const [result, setResult] = useState<ThemeResult | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const handlePredict = async (themeKey: string) => {
+  // 初回読み込み: predictions.json を取得
+  useEffect(() => {
+    fetch(`${DATA_URL}/predictions.json`)
+      .then((res) => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
+      .then((json: PredictionsData) => {
+        setData(json);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(`データ取得に失敗しました: ${err.message}`);
+        setLoading(false);
+      });
+  }, []);
+
+  const handlePredict = (themeKey: string) => {
+    if (!data) return;
     setSelectedTheme(themeKey);
-    setLoading(true);
-
-    // Phase 1: デモデータ。API接続後は以下に差し替え:
-    // const res = await fetch(`/api/predict`, {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify({ mode: themeKey, count: 3 }),
-    // });
-    // const data = await res.json();
-
-    await new Promise((r) => setTimeout(r, 800));
-    const data = generateDemoData(themeKey);
-    setResult(data);
-    setLoading(false);
+    const theme = data.themes.find((t) => t.theme.key === themeKey);
+    setResult(theme || null);
   };
+
+  // 初回ローディング
+  if (loading) {
+    return (
+      <main className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block w-10 h-10 border-2 border-indigo-400 border-t-transparent rounded-full animate-spin" />
+          <p className="text-gray-400 mt-4">データを読み込み中...</p>
+        </div>
+      </main>
+    );
+  }
+
+  // エラー
+  if (error) {
+    return (
+      <main className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-400 mb-2">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="text-sm text-indigo-400 underline"
+          >
+            再読み込み
+          </button>
+        </div>
+      </main>
+    );
+  }
+
+  const meta = data?.meta;
 
   return (
     <main className="min-h-screen">
       {/* ヘッダー */}
-      <header className="pt-12 pb-8 text-center">
+      <header className="pt-12 pb-4 text-center">
         <h1 className="text-4xl font-bold tracking-tight mb-2">
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">
             Loto6 Analyzer
           </span>
         </h1>
         <p className="text-gray-400 text-sm">
-          過去2000回超のデータから、統計に基づく予測番号を生成
+          過去{meta?.total_draws?.toLocaleString()}回のデータから、統計に基づく予測番号を生成
         </p>
       </header>
+
+      {/* メタ情報 */}
+      {meta && (
+        <div className="flex justify-center gap-6 text-xs text-gray-500 pb-6">
+          <span>
+            最新: 第{meta.latest_draw.number}回（{meta.latest_draw.date}）
+          </span>
+          <span>
+            当選番号: {meta.latest_draw.numbers.join(", ")} +{" "}
+            {meta.latest_draw.bonus}
+          </span>
+        </div>
+      )}
 
       {/* テーマ選択 */}
       <section className="max-w-4xl mx-auto px-4 pb-8">
@@ -186,16 +223,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ローディング */}
-      {loading && (
-        <div className="text-center py-16">
-          <div className="inline-block w-8 h-8 border-2 border-indigo-400 border-t-transparent rounded-full animate-spin" />
-          <p className="text-gray-400 mt-4 text-sm">分析中...</p>
-        </div>
-      )}
-
       {/* 結果表示 */}
-      {result && !loading && (
+      {result && (
         <section className="max-w-4xl mx-auto px-4 pb-16">
           <div className="text-center mb-8">
             <span className="text-4xl">{result.theme.icon}</span>
@@ -203,6 +232,23 @@ export default function Home() {
             <p className="text-gray-400 text-sm">{result.theme.description}</p>
           </div>
 
+          {/* スコアTOP10 */}
+          <div className="flex justify-center gap-2 mb-8 flex-wrap">
+            {result.top10.map((item, i) => (
+              <div
+                key={i}
+                className="flex items-center gap-1 bg-white/5 rounded-lg px-2 py-1"
+              >
+                <NumberBall num={item.number} size="sm" />
+                <span className="text-xs text-gray-400 font-mono">
+                  {item.score > 0 ? "+" : ""}
+                  {item.score}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          {/* 予測セット */}
           <div className="space-y-6">
             {result.predictions.map((pred, i) => {
               const themeStyle = THEMES.find(
@@ -251,16 +297,18 @@ export default function Home() {
                     </span>
                   </div>
 
-                  <div className="flex flex-wrap justify-center gap-2">
-                    {pred.reasons.map((reason, j) => (
-                      <span
-                        key={j}
-                        className="text-xs px-2 py-1 rounded-md bg-white/5 text-gray-300"
-                      >
-                        {reason}
-                      </span>
-                    ))}
-                  </div>
+                  {pred.reasons.length > 0 && (
+                    <div className="flex flex-wrap justify-center gap-2">
+                      {pred.reasons.map((reason, j) => (
+                        <span
+                          key={j}
+                          className="text-xs px-2 py-1 rounded-md bg-white/5 text-gray-300"
+                        >
+                          {reason}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
               );
             })}
@@ -273,13 +321,28 @@ export default function Home() {
         </section>
       )}
 
-      {!result && !loading && (
+      {/* 未選択時 */}
+      {!result && (
         <div className="text-center py-16">
           <p className="text-gray-600 text-sm">
             上のテーマを選んで予測を開始
           </p>
         </div>
       )}
+
+      {/* フッター */}
+      <footer className="py-6 text-center border-t border-gray-800/50">
+        <div className="text-xs text-gray-600 space-y-1">
+          {meta && (
+            <p>
+              データ更新:{" "}
+              {new Date(meta.generated_at).toLocaleString("ja-JP")} / 全
+              {meta.total_draws.toLocaleString()}回分
+            </p>
+          )}
+          <p>Loto6 Analyzer v1.0</p>
+        </div>
+      </footer>
     </main>
   );
 }
