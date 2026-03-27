@@ -15,6 +15,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from data_source import get_latest_draws
 from analysis import run_all, frequency, hot_cold, intervals, pair_correlation, sum_analysis
 from predict import generate_all_themes, generate_quick
+from history import save_predictions_to_history, check_history_against_results, get_history_summary, load_history
 
 
 def main():
@@ -88,6 +89,28 @@ def main():
             "draws": recent_draws,
         },
     }
+
+    # 6. 履歴の保存・照合
+    print("📜 履歴を更新中...")
+    history_path = os.path.join(data_dir, "history.json")
+
+    # 今回の予測を履歴に保存
+    save_predictions_to_history(history_path, all_predictions, meta)
+
+    # 過去の未チェック予測を実際の結果と照合
+    history = check_history_against_results(history_path, draws)
+    history_summary = get_history_summary(history)
+
+    outputs["history.json"] = {
+        "meta": meta,
+        "summary": history_summary,
+    }
+
+    checked_count = history_summary["total_checked"]
+    print(f"  📊 照合済み: {checked_count}件")
+    if checked_count > 0:
+        for theme_key, stats in history_summary["theme_stats"].items():
+            print(f"     {theme_key}: 平均{stats['avg_match']}個一致 / 最高{stats['best_match']}個")
 
     # pair_counts は巨大なので analysis.json からは除外
     if "pair_correlation" in outputs["analysis.json"]:

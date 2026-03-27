@@ -14,6 +14,7 @@ const THEMES = [
     name: "ホット追従型",
     icon: "🔥",
     description: "直近の流れに乗る",
+    vibe: "勢いに乗る構成",
     color: "from-red-500/20 to-orange-500/20",
     border: "border-red-500/30",
     badge: "bg-red-500/20 text-red-300",
@@ -23,6 +24,7 @@ const THEMES = [
     name: "コールド反発型",
     icon: "❄️",
     description: "出遅れの揺り戻し",
+    vibe: "静かに待った構成",
     color: "from-blue-500/20 to-cyan-500/20",
     border: "border-blue-500/30",
     badge: "bg-blue-500/20 text-blue-300",
@@ -32,6 +34,7 @@ const THEMES = [
     name: "バランス重視型",
     icon: "⚖️",
     description: "安定志向の王道",
+    vibe: "安定した構成",
     color: "from-emerald-500/20 to-teal-500/20",
     border: "border-emerald-500/30",
     badge: "bg-emerald-500/20 text-emerald-300",
@@ -41,6 +44,7 @@ const THEMES = [
     name: "中央値集中型",
     icon: "🎯",
     description: "最頻帯を狙い撃ち",
+    vibe: "統計の中心を突く構成",
     color: "from-purple-500/20 to-pink-500/20",
     border: "border-purple-500/30",
     badge: "bg-purple-500/20 text-purple-300",
@@ -50,6 +54,7 @@ const THEMES = [
     name: "ワイルドカード型",
     icon: "🃏",
     description: "揺らぎ最大の攻め",
+    vibe: "直感に委ねた構成",
     color: "from-amber-500/20 to-yellow-500/20",
     border: "border-amber-500/30",
     badge: "bg-amber-500/20 text-amber-300",
@@ -59,11 +64,20 @@ const THEMES = [
     name: "逆張り型",
     icon: "🪞",
     description: "設計側の視点で読む",
+    vibe: "あえて外した構成",
     color: "from-gray-500/20 to-slate-500/20",
     border: "border-gray-400/30",
     badge: "bg-gray-500/20 text-gray-300",
   },
 ];
+
+const GRADE_LABELS: Record<string, { label: string; color: string }> = {
+  perfect: { label: "完全一致", color: "text-yellow-300" },
+  excellent: { label: "4個以上", color: "text-emerald-300" },
+  good: { label: "3個一致", color: "text-blue-300" },
+  close: { label: "惜しい", color: "text-purple-300" },
+  miss: { label: "外れ", color: "text-gray-500" },
+};
 
 interface Prediction {
   numbers: number[];
@@ -97,6 +111,38 @@ interface PredictionsData {
   themes: ThemeResult[];
 }
 
+interface HistoryResult {
+  matched_numbers: number[];
+  match_count: number;
+  odd_even_match: boolean;
+  high_low_match: boolean;
+  sum_range_match: boolean;
+  grade: string;
+}
+
+interface HistoryEntry {
+  target_draw: number;
+  based_on_date: string;
+  checked: boolean;
+  actual: number[] | null;
+  themes: Record<string, { numbers: number[]; total: number; reasons: string[] }>;
+  results?: Record<string, HistoryResult>;
+}
+
+interface HistoryData {
+  meta: Meta;
+  summary: {
+    total_checked: number;
+    theme_stats: Record<string, {
+      avg_match: number;
+      best_match: number;
+      grades: Record<string, number>;
+      total: number;
+    }>;
+    recent: HistoryEntry[];
+  };
+}
+
 // 番号ボール
 function NumberBall({ num, size = "lg" }: { num: number; size?: "sm" | "lg" }) {
   const sizeClass = size === "lg" ? "w-14 h-14 text-2xl" : "w-9 h-9 text-sm";
@@ -118,24 +164,26 @@ function NumberBall({ num, size = "lg" }: { num: number; size?: "sm" | "lg" }) {
 
 export default function Home() {
   const [data, setData] = useState<PredictionsData | null>(null);
+  const [historyData, setHistoryData] = useState<HistoryData | null>(null);
   const [selectedTheme, setSelectedTheme] = useState<string | null>(null);
   const [result, setResult] = useState<ThemeResult | null>(null);
+  const [myPick, setMyPick] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // 初回読み込み: predictions.json を取得
+  // 初回読み込み
   useEffect(() => {
-    fetch(`${DATA_URL}/predictions.json`)
-      .then((res) => {
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return res.json();
-      })
-      .then((json: PredictionsData) => {
-        setData(json);
+    Promise.all([
+      fetch(`${DATA_URL}/predictions.json`).then((r) => r.ok ? r.json() : Promise.reject(r.status)),
+      fetch(`${DATA_URL}/history.json`).then((r) => r.ok ? r.json() : null).catch(() => null),
+    ])
+      .then(([predictions, history]) => {
+        setData(predictions);
+        setHistoryData(history);
         setLoading(false);
       })
       .catch((err) => {
-        setError(`データ取得に失敗しました: ${err.message}`);
+        setError(`データ取得に失敗しました: ${err}`);
         setLoading(false);
       });
   }, []);
@@ -239,12 +287,16 @@ export default function Home() {
             <span className="text-4xl">{result.theme.icon}</span>
             <h3 className="text-xl font-bold mt-2">{result.theme.name}</h3>
             <p className="text-gray-400 text-sm">{result.theme.description}</p>
-            {/* 逆張りモード: 思想サマリー */}
-            {result.theme.key === "contrarian" && (
-              <p className="text-gray-500 text-xs mt-2 italic">
-                &quot;人間の選択バイアスを逆手に取った構成&quot;
-              </p>
-            )}
+            {/* テーマの一言コメント */}
+            {(() => {
+              const t = THEMES.find(t => t.key === result.theme.key);
+              const vibe = result.theme.key === "contrarian"
+                ? "人間の選択バイアスを逆手に取った構成"
+                : t?.vibe;
+              return vibe ? (
+                <p className="text-gray-500 text-xs mt-2 italic">&quot;{vibe}&quot;</p>
+              ) : null;
+            })()}
           </div>
 
           {/* 逆張りモード: バランス型との比較 */}
@@ -395,12 +447,130 @@ export default function Home() {
         </section>
       )}
 
-      {/* 未選択時 */}
-      {!result && (
-        <div className="text-center py-16">
-          <p className="text-gray-600 text-sm">
-            上のテーマを選んで予測を開始
-          </p>
+      {/* 未選択時: どっちに賭ける？ + 履歴 */}
+      {!result && data && (
+        <div className="max-w-4xl mx-auto px-4 pb-16">
+          {/* どっちに賭ける？ */}
+          {(() => {
+            const balanced = data.themes.find(t => t.theme.key === "balanced");
+            const contrarian = data.themes.find(t => t.theme.key === "contrarian");
+            if (!balanced?.predictions[0] || !contrarian?.predictions[0]) return null;
+            const b = balanced.predictions[0];
+            const c = contrarian.predictions[0];
+
+            return (
+              <div className="mb-12">
+                <h2 className="text-sm uppercase tracking-widest text-gray-500 mb-6 text-center">
+                  今回、どっちに賭ける？
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* バランス側 */}
+                  <button
+                    onClick={() => { setMyPick("balanced"); handlePredict("balanced"); }}
+                    className={`p-6 rounded-2xl border transition-all duration-200
+                      ${myPick === "balanced" ? "border-emerald-400 ring-2 ring-emerald-400/50" : "border-emerald-500/30"}
+                      bg-gradient-to-br from-emerald-500/10 to-teal-500/10 hover:scale-[1.02]`}
+                  >
+                    <div className="text-2xl mb-2">⚖️</div>
+                    <div className="text-sm font-semibold text-emerald-300 mb-3">バランス重視型</div>
+                    <div className="flex justify-center gap-2 mb-3">
+                      {b.numbers.map(n => <NumberBall key={n} num={n} size="sm" />)}
+                    </div>
+                    <p className="text-xs text-gray-400 italic">&quot;安定した構成&quot;</p>
+                  </button>
+
+                  {/* 逆張り側 */}
+                  <button
+                    onClick={() => { setMyPick("contrarian"); handlePredict("contrarian"); }}
+                    className={`p-6 rounded-2xl border transition-all duration-200
+                      ${myPick === "contrarian" ? "border-gray-300 ring-2 ring-gray-400/50" : "border-gray-500/30"}
+                      bg-gradient-to-br from-gray-500/10 to-slate-500/10 hover:scale-[1.02]`}
+                  >
+                    <div className="text-2xl mb-2">🪞</div>
+                    <div className="text-sm font-semibold text-gray-300 mb-3">逆張り型</div>
+                    <div className="flex justify-center gap-2 mb-3">
+                      {c.numbers.map(n => <NumberBall key={n} num={n} size="sm" />)}
+                    </div>
+                    <p className="text-xs text-gray-400 italic">&quot;あえて外した構成&quot;</p>
+                  </button>
+                </div>
+              </div>
+            );
+          })()}
+
+          {/* 履歴セクション */}
+          {historyData && historyData.summary.total_checked > 0 && (
+            <div>
+              <h2 className="text-sm uppercase tracking-widest text-gray-500 mb-6 text-center">
+                過去の的中履歴
+              </h2>
+
+              {/* テーマ別成績 */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-8">
+                {Object.entries(historyData.summary.theme_stats).map(([key, stats]) => {
+                  const theme = THEMES.find(t => t.key === key);
+                  if (!theme) return null;
+                  return (
+                    <div key={key} className="p-3 rounded-xl border border-gray-700/50 bg-white/3 text-center">
+                      <span className="text-lg">{theme.icon}</span>
+                      <p className="text-xs text-gray-400 mt-1">{theme.name}</p>
+                      <p className="text-lg font-bold text-gray-200 mt-1">
+                        平均 {stats.avg_match} 個
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        最高 {stats.best_match}個 / {stats.total}回
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* 直近の結果 */}
+              <div className="space-y-3">
+                {historyData.summary.recent.map((entry, i) => (
+                  <div key={i} className="p-4 rounded-xl border border-gray-700/50 bg-white/3">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-xs text-gray-500">
+                        第{entry.target_draw}回（{entry.based_on_date}時点の予測）
+                      </span>
+                    </div>
+                    {entry.actual && (
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="text-xs text-gray-500">実際:</span>
+                        <div className="flex gap-1">
+                          {entry.actual.map(n => <NumberBall key={n} num={n} size="sm" />)}
+                        </div>
+                      </div>
+                    )}
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                      {entry.results && Object.entries(entry.results).map(([themeKey, result]) => {
+                        const theme = THEMES.find(t => t.key === themeKey);
+                        const grade = GRADE_LABELS[result.grade];
+                        if (!theme) return null;
+                        return (
+                          <div key={themeKey} className="flex items-center gap-2 text-xs">
+                            <span>{theme.icon}</span>
+                            <span className={grade?.color || "text-gray-400"}>
+                              {result.match_count}/6
+                              {result.odd_even_match && " 奇偶○"}
+                              {result.sum_range_match && " 合計○"}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* 履歴がまだない場合 */}
+          {(!historyData || historyData.summary.total_checked === 0) && (
+            <p className="text-center text-gray-600 text-xs mt-8">
+              履歴はデータ更新後に蓄積されます
+            </p>
+          )}
         </div>
       )}
 
