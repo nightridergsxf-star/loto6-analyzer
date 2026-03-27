@@ -239,7 +239,49 @@ export default function Home() {
             <span className="text-4xl">{result.theme.icon}</span>
             <h3 className="text-xl font-bold mt-2">{result.theme.name}</h3>
             <p className="text-gray-400 text-sm">{result.theme.description}</p>
+            {/* 逆張りモード: 思想サマリー */}
+            {result.theme.key === "contrarian" && (
+              <p className="text-gray-500 text-xs mt-2 italic">
+                &quot;人間の選択バイアスを逆手に取った構成&quot;
+              </p>
+            )}
           </div>
+
+          {/* 逆張りモード: バランス型との比較 */}
+          {result.theme.key === "contrarian" && data && (() => {
+            const balanced = data.themes.find(t => t.theme.key === "balanced");
+            if (!balanced) return null;
+            const balancedNums = new Set(balanced.predictions.flatMap(p => p.numbers));
+            const contrarianNums = new Set(result.predictions.flatMap(p => p.numbers));
+            const onlyContrarian = [...contrarianNums].filter(n => !balancedNums.has(n)).sort((a, b) => a - b);
+            const onlyBalanced = [...balancedNums].filter(n => !contrarianNums.has(n)).sort((a, b) => a - b);
+
+            return (
+              <div className="mb-8 p-4 rounded-xl border border-gray-700/50 bg-white/3">
+                <h4 className="text-xs text-gray-500 uppercase tracking-widest mb-3 text-center">
+                  バランス型とのズレ
+                </h4>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="text-center">
+                    <p className="text-xs text-emerald-400 mb-2">⚖️ バランス型だけ</p>
+                    <div className="flex justify-center gap-1 flex-wrap">
+                      {onlyBalanced.slice(0, 8).map(n => (
+                        <NumberBall key={n} num={n} size="sm" />
+                      ))}
+                    </div>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-xs text-gray-300 mb-2">🪞 逆張り型だけ</p>
+                    <div className="flex justify-center gap-1 flex-wrap">
+                      {onlyContrarian.slice(0, 8).map(n => (
+                        <NumberBall key={n} num={n} size="sm" />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
 
           {/* スコアTOP10 */}
           <div className="flex justify-center gap-2 mb-8 flex-wrap">
@@ -263,6 +305,22 @@ export default function Home() {
               const themeStyle = THEMES.find(
                 (t) => t.key === result.theme.key
               )!;
+
+              // 逆張り度の計算
+              const contrarianLevel = result.theme.key === "contrarian"
+                ? (() => {
+                    const highZone = pred.numbers.filter(n => n >= 32).length;
+                    const sorted = [...pred.numbers].sort((a, b) => a - b);
+                    const hasConsec = sorted.some((n, i) => i < sorted.length - 1 && sorted[i + 1] - n === 1);
+                    const roundNums = new Set([5, 10, 15, 20, 25, 30, 35, 40]);
+                    const hasRound = pred.numbers.some(n => roundNums.has(n));
+                    const score = highZone * 2 + (hasConsec ? 0 : 2) + (hasRound ? 0 : 1);
+                    if (score >= 6) return { label: "強い逆張り", icon: "⚠️", color: "text-red-400" };
+                    if (score >= 3) return { label: "中程度", icon: "🔀", color: "text-amber-400" };
+                    return { label: "バランス寄り", icon: "🎯", color: "text-emerald-400" };
+                  })()
+                : null;
+
               return (
                 <div
                   key={i}
@@ -274,9 +332,16 @@ export default function Home() {
                     >
                       セット {i + 1}
                     </span>
-                    <span className="text-xs text-gray-500">
-                      スコア: {pred.score}
-                    </span>
+                    <div className="flex items-center gap-3">
+                      {contrarianLevel && (
+                        <span className={`text-xs ${contrarianLevel.color}`}>
+                          {contrarianLevel.icon} {contrarianLevel.label}
+                        </span>
+                      )}
+                      <span className="text-xs text-gray-500">
+                        スコア: {pred.score}
+                      </span>
+                    </div>
                   </div>
 
                   <div className="flex justify-center gap-3 mb-5">
