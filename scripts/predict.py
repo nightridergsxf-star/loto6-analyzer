@@ -54,6 +54,7 @@ def generate_predictions(draws: list[dict], freq_data: dict, hot_cold_data: dict
     probs = exp_scores / exp_scores.sum()
 
     # ルーレット選択
+    is_contrarian = theme.get("contrarian", False)
     sets = []
     attempts = 0
     while len(sets) < n_sets * 4 and attempts < 20000:
@@ -62,7 +63,7 @@ def generate_predictions(draws: list[dict], freq_data: dict, hot_cold_data: dict
         s = sum(chosen)
         if s < 40 or s > 220:
             continue
-        combo = score_combination(chosen, scores, sum_mean, sum_std)
+        combo = score_combination(chosen, scores, sum_mean, sum_std, contrarian=is_contrarian)
         num_score = sum(scores[n] for n in chosen)
         total_score = num_score + combo * sum_weight
         sets.append((chosen, round(total_score, 2), round(combo, 2)))
@@ -102,6 +103,19 @@ def generate_predictions(draws: list[dict], freq_data: dict, hot_cold_data: dict
         optimal = sum_data["optimal_range"]
         if optimal["low"] <= s <= optimal["high"]:
             reasons.append("合計値が最適帯")
+
+        # 逆張りモード固有の理由
+        if is_contrarian:
+            high_zone = [n for n in nums if n >= 32]
+            if high_zone:
+                reasons.append(f"{','.join(map(str, high_zone))}は誕生日圏外")
+            sorted_nums = sorted(nums)
+            has_consec = any(sorted_nums[i+1] - sorted_nums[i] == 1 for i in range(len(sorted_nums)-1))
+            if not has_consec:
+                reasons.append("連番なし（人が選ぶパターンを回避）")
+            round_nums = {5, 10, 15, 20, 25, 30, 35, 40}
+            if not any(n in round_nums for n in nums):
+                reasons.append("キリ番なし")
 
         predictions.append({
             "numbers": nums,

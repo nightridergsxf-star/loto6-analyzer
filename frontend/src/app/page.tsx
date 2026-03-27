@@ -54,6 +54,15 @@ const THEMES = [
     border: "border-amber-500/30",
     badge: "bg-amber-500/20 text-amber-300",
   },
+  {
+    key: "contrarian",
+    name: "逆張り型",
+    icon: "🪞",
+    description: "設計側の視点で読む",
+    color: "from-gray-500/20 to-slate-500/20",
+    border: "border-gray-400/30",
+    badge: "bg-gray-500/20 text-gray-300",
+  },
 ];
 
 interface Prediction {
@@ -201,7 +210,7 @@ export default function Home() {
         <h2 className="text-sm uppercase tracking-widest text-gray-500 mb-4 text-center">
           テーマを選んで予測
         </h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
           {THEMES.map((theme) => (
             <button
               key={theme.key}

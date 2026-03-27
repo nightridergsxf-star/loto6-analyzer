@@ -44,6 +44,15 @@ THEMES = {
         "temperature": 1.5,
         "sum_weight": 1.0,
     },
+    "contrarian": {
+        "name": "逆張り型",
+        "icon": "🪞",
+        "description": "設計側の視点。当たりそうで当たらない領域を読む",
+        "weights": {"frequency": 0.20, "hot": 0.15, "overdue": 0.10, "carryover": -0.10, "pair": -0.20, "decay": 0.15},
+        "temperature": 1.2,
+        "sum_weight": 1.0,
+        "contrarian": True,
+    },
 }
 
 
@@ -151,7 +160,8 @@ def apply_theme(raw_scores: dict, theme_key: str) -> dict:
     return final
 
 
-def score_combination(chosen: list[int], scores: dict, sum_mean: float, sum_std: float) -> float:
+def score_combination(chosen: list[int], scores: dict, sum_mean: float, sum_std: float,
+                      contrarian: bool = False) -> float:
     """組み合わせのソフトスコアを計算"""
     total = sum(chosen)
     combo = 0.0
@@ -178,4 +188,43 @@ def score_combination(chosen: list[int], scores: dict, sum_mean: float, sum_std:
         else: decades.add(4)
     combo += len(decades) * 1.5
 
+    if contrarian:
+        combo += _contrarian_bonus(chosen)
+
     return round(combo, 2)
+
+
+def _contrarian_bonus(chosen: list[int]) -> float:
+    """逆張り専用の組み合わせボーナス
+
+    設計側ロジック:
+    - 誕生日ゾーン(1-31)に偏りすぎを避ける → 32-43を含むと加点
+    - 人が選びがちなキリのいい数字(10,20,30,40)を避ける
+    - 連番ペアを避ける（人は連番を好む）
+    - バランスは自然に見せる（崩しすぎない）
+    """
+    bonus = 0.0
+
+    # 32-43の高域番号を含むほど加点（人は誕生日ゾーン1-31を選びがち）
+    high_zone = sum(1 for n in chosen if n >= 32)
+    bonus += high_zone * 2.0
+
+    # キリのいい数字を避ける
+    round_nums = {5, 10, 15, 20, 25, 30, 35, 40}
+    round_count = sum(1 for n in chosen if n in round_nums)
+    bonus -= round_count * 1.5
+
+    # 連番ペアを避ける（人は連番を好むので、設計側は連番を出さない）
+    sorted_nums = sorted(chosen)
+    consec = sum(1 for i in range(len(sorted_nums)-1) if sorted_nums[i+1] - sorted_nums[i] == 1)
+    bonus -= consec * 3.0
+
+    # 末尾が同じ数字が複数あると減点（見た目の違和感で人が選ばない）
+    tails = [n % 10 for n in chosen]
+    from collections import Counter
+    tail_counts = Counter(tails)
+    for t, c in tail_counts.items():
+        if c >= 2:
+            bonus += c * 1.0  # 逆に設計側はこれを使う（人が避けるから）
+
+    return bonus
