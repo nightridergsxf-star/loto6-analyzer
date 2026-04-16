@@ -85,7 +85,7 @@ python3 loto6_analyzer.py
 ## データソース
 
 - [KYO's LOTO6](https://loto6.thekyo.jp/) の CSV データ（Shift-JIS → UTF-8変換）
-- 全2085回分（2000/10/05〜2026/03/16時点）
+- 全2094回分（2000/10/05〜2026/04/16時点）
 
 ## 注意事項
 

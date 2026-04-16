@@ -104,6 +104,7 @@ def main():
     outputs["history.json"] = {
         "meta": meta,
         "summary": history_summary,
+        "entries": history,
     }
 
     checked_count = history_summary["total_checked"]

@@ -5,10 +5,13 @@ from datetime import datetime
 
 
 def load_history(history_path: str) -> list[dict]:
-    """履歴JSONを読み込む"""
+    """履歴JSONを読み込む（フロント用の dict 形式と内部の list 形式の両方に対応）"""
     if os.path.exists(history_path):
         with open(history_path, "r", encoding="utf-8") as f:
-            return json.load(f)
+            data = json.load(f)
+            if isinstance(data, dict):
+                return data.get("entries", [])
+            return data
     return []
 
 
