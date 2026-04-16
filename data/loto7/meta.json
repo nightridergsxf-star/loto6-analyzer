@@ -1,0 +1,32 @@
+{
+  "game": "loto7",
+  "display_name": "ロト7",
+  "max_number": 37,
+  "pick_count": 7,
+  "bonus_count": 2,
+  "low_high_split": 18,
+  "generated_at": "2026-04-17T00:04:48.972922",
+  "total_draws": 672,
+  "latest_draw": {
+    "number": 672,
+    "date": "2026-04-10",
+    "numbers": [
+      7,
+      11,
+      15,
+      16,
+      17,
+      24,
+      33
+    ],
+    "bonus": 6,
+    "bonuses": [
+      6,
+      9
+    ]
+  },
+  "date_range": {
+    "from": "2013-04-05",
+    "to": "2026-04-10"
+  }
+}

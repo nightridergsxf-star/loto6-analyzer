@@ -1,5 +1,25 @@
 # DEVLOG
 
+## 2026-04-17 ロト7 対応（ゲーム切替アーキテクチャ）
+### 実施内容
+- `scripts/game_config.py` 新設: `GameConfig` dataclass + LOTO6 / LOTO7 インスタンス
+  - 番号範囲/pick数/ボーナス数/高低分割/逆張り閾値/CSV URL & カラム を一元管理
+- Python 側を全てパラメータ化（`data_source` / `analysis` / `scoring` / `predict` / `history`）
+- `scripts/generate.py` を両ゲーム対応 (`--game loto6|loto7|all`)、出力を `data/loto6/` `data/loto7/` に分離
+- Worker: 全エンドポイントに `?game=loto6|loto7` パラメータ追加（デフォルト loto6）
+- Frontend: ヘッダーにロト6/ロト7 トグル、URL クエリ `?game=...` で状態保持、`bonuses` 複数対応
+- GitHub Actions: cron に金曜 (ロト7 抽選日) 追加、`loto7.csv` も commit
+- `loto6_analyzer.py` (旧 CLI) は触らず凍結
+- 旧 `data/*.json`（root 直下）は削除、全て `data/{loto6,loto7}/` 配下へ
+
+### 成果
+- ロト6: 2094回分 / ロト7: 672回分 のデータ生成確認
+- `cd frontend && npm run build` 成功
+
+### 課題・備考
+- Loto7 の予測履歴は初回投入のみ。次回以降の抽選で照合が回るかを観察
+- contrarian ボーナスの Loto7 向けチューニング（閾値=28, ラウンド数=35以下）はざっくり設定。運用しつつ調整余地あり
+
 ## 2026-04-16 最新データ反映 & history.json 読み書きバグ修正
 ### 実施内容
 - `scripts/generate.py` 実行で最新抽選データを反映（第2085回 → 第2094回、+9回分）

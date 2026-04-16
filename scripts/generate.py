@@ -1,39 +1,42 @@
 #!/usr/bin/env python3
 """
-ロト6 データ生成スクリプト
-分析結果と予測をJSON化して data/ に出力する
+ロト6 / ロト7 データ生成スクリプト
+分析結果と予測をJSON化して data/<game>/ に出力する
 Cloudflare Workers / Pages から読み込む前処理用
+
+Usage:
+    python scripts/generate.py                   # 両ゲーム生成
+    python scripts/generate.py --game loto6      # ロト6 のみ
+    python scripts/generate.py --game loto7      # ロト7 のみ
 """
+import argparse
 import json
 import os
 import sys
 from datetime import datetime
 
-# scriptsディレクトリをパスに追加
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from data_source import get_latest_draws
-from analysis import run_all, frequency, hot_cold, intervals, pair_correlation, sum_analysis
+from analysis import run_all
 from predict import generate_all_themes, generate_quick
-from history import save_predictions_to_history, check_history_against_results, get_history_summary, load_history
+from history import save_predictions_to_history, check_history_against_results, get_history_summary
+from game_config import GAMES, get_config
 
 
-def main():
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    project_dir = os.path.dirname(script_dir)
-    data_dir = os.path.join(project_dir, "data")
+def run_for_game(cfg, project_dir: str):
+    data_dir = os.path.join(project_dir, "data", cfg.name)
     os.makedirs(data_dir, exist_ok=True)
 
-    # 1. データ取得
+    print(f"\n=== {cfg.display_name} ({cfg.name}) ===")
+
     print("📥 データ取得中...")
-    draws = get_latest_draws(project_dir)
+    draws = get_latest_draws(project_dir, cfg)
     print(f"✅ {len(draws)}回分のデータを取得")
 
-    # 2. 全分析実行
     print("📊 分析実行中...")
-    analysis = run_all(draws)
+    analysis = run_all(draws, cfg)
 
-    # 3. 予測生成
     print("🎯 予測生成中...")
     freq_data = analysis["frequency"]
     hot_cold_data = analysis["hot_cold"]
@@ -43,15 +46,20 @@ def main():
 
     all_predictions = generate_all_themes(
         draws, freq_data, hot_cold_data, interval_data, pair_data, sum_data,
-        n_sets=5
+        cfg, n_sets=5
     )
     quick_predictions = generate_quick(
-        draws, freq_data, hot_cold_data, interval_data, pair_data, sum_data
+        draws, freq_data, hot_cold_data, interval_data, pair_data, sum_data, cfg
     )
 
-    # 4. メタ情報
     latest = draws[-1]
     meta = {
+        "game": cfg.name,
+        "display_name": cfg.display_name,
+        "max_number": cfg.max_number,
+        "pick_count": cfg.pick_count,
+        "bonus_count": cfg.bonus_count,
+        "low_high_split": cfg.low_high_split,
         "generated_at": datetime.now().isoformat(),
         "total_draws": len(draws),
         "latest_draw": {
@@ -59,6 +67,7 @@ def main():
             "date": latest["date"],
             "numbers": latest["numbers"],
             "bonus": latest["bonus"],
+            "bonuses": latest.get("bonuses", [latest["bonus"]]),
         },
         "date_range": {
             "from": draws[0]["date"],
@@ -66,39 +75,24 @@ def main():
         },
     }
 
-    # 5. JSON出力
-    # 直近の抽選データ（フロント表示用、直近100回分）
     recent_draws = [
-        {"draw": d["draw"], "date": d["date"], "numbers": d["numbers"], "bonus": d["bonus"]}
+        {"draw": d["draw"], "date": d["date"], "numbers": d["numbers"],
+         "bonus": d["bonus"], "bonuses": d.get("bonuses", [d["bonus"]])}
         for d in draws[-100:]
     ]
 
     outputs = {
         "meta.json": meta,
         "analysis.json": analysis,
-        "predictions.json": {
-            "meta": meta,
-            "themes": all_predictions,
-        },
-        "quick.json": {
-            "meta": meta,
-            "predictions": quick_predictions,
-        },
-        "recent_draws.json": {
-            "meta": meta,
-            "draws": recent_draws,
-        },
+        "predictions.json": {"meta": meta, "themes": all_predictions},
+        "quick.json": {"meta": meta, "predictions": quick_predictions},
+        "recent_draws.json": {"meta": meta, "draws": recent_draws},
     }
 
-    # 6. 履歴の保存・照合
     print("📜 履歴を更新中...")
     history_path = os.path.join(data_dir, "history.json")
-
-    # 今回の予測を履歴に保存
     save_predictions_to_history(history_path, all_predictions, meta)
-
-    # 過去の未チェック予測を実際の結果と照合
-    history = check_history_against_results(history_path, draws)
+    history = check_history_against_results(history_path, draws, cfg)
     history_summary = get_history_summary(history)
 
     outputs["history.json"] = {
@@ -113,7 +107,6 @@ def main():
         for theme_key, stats in history_summary["theme_stats"].items():
             print(f"     {theme_key}: 平均{stats['avg_match']}個一致 / 最高{stats['best_match']}個")
 
-    # pair_counts は巨大なので analysis.json からは除外
     if "pair_correlation" in outputs["analysis.json"]:
         outputs["analysis.json"]["pair_correlation"].pop("pair_counts", None)
 
@@ -122,9 +115,23 @@ def main():
         with open(path, "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False, indent=2)
         size = os.path.getsize(path)
-        print(f"  💾 {filename} ({size:,} bytes)")
+        print(f"  💾 {cfg.name}/{filename} ({size:,} bytes)")
 
-    print(f"\n✅ 完了！{len(outputs)}ファイルを {data_dir} に出力しました")
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--game", choices=list(GAMES.keys()) + ["all"], default="all")
+    args = parser.parse_args()
+
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    project_dir = os.path.dirname(script_dir)
+
+    targets = list(GAMES.values()) if args.game == "all" else [get_config(args.game)]
+
+    for cfg in targets:
+        run_for_game(cfg, project_dir)
+
+    print(f"\n✅ 完了！")
 
 
 if __name__ == "__main__":

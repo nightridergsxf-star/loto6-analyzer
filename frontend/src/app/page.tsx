@@ -2,10 +2,21 @@
 
 import { useState, useEffect } from "react";
 
-// Phase 1: GitHub raw URLから直接読む
-// Phase 2: Cloudflare Worker API に差し替え
-const DATA_URL =
+const DATA_BASE_URL =
   "https://raw.githubusercontent.com/nightridergsxf-star/loto6-analyzer/main/data";
+
+type Game = "loto6" | "loto7";
+
+const GAMES: { key: Game; label: string; accent: string }[] = [
+  { key: "loto6", label: "ロト6", accent: "from-indigo-400 to-purple-400" },
+  { key: "loto7", label: "ロト7", accent: "from-amber-400 to-rose-400" },
+];
+
+function readGameFromURL(): Game {
+  if (typeof window === "undefined") return "loto6";
+  const q = new URLSearchParams(window.location.search).get("game");
+  return q === "loto7" ? "loto7" : "loto6";
+}
 
 // テーマ定義
 const THEMES = [
@@ -96,6 +107,11 @@ interface ThemeResult {
 }
 
 interface Meta {
+  game?: Game;
+  display_name?: string;
+  max_number?: number;
+  pick_count?: number;
+  bonus_count?: number;
   generated_at: string;
   total_draws: number;
   latest_draw: {
@@ -103,6 +119,7 @@ interface Meta {
     date: string;
     numbers: number[];
     bonus: number;
+    bonuses?: number[];
   };
 }
 
@@ -162,7 +179,30 @@ function NumberBall({ num, size = "lg" }: { num: number; size?: "sm" | "lg" }) {
   );
 }
 
+function GameToggle({ game, onChange }: { game: Game; onChange: (g: Game) => void }) {
+  return (
+    <div className="flex justify-center mb-4">
+      <div className="inline-flex rounded-xl border border-gray-700/60 bg-white/5 p-1">
+        {GAMES.map((g) => (
+          <button
+            key={g.key}
+            onClick={() => onChange(g.key)}
+            className={`px-4 py-1.5 text-sm font-semibold rounded-lg transition-all ${
+              game === g.key
+                ? `text-white bg-gradient-to-r ${g.accent} shadow`
+                : "text-gray-400 hover:text-gray-200"
+            }`}
+          >
+            {g.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function Home() {
+  const [game, setGame] = useState<Game>("loto6");
   const [data, setData] = useState<PredictionsData | null>(null);
   const [historyData, setHistoryData] = useState<HistoryData | null>(null);
   const [selectedTheme, setSelectedTheme] = useState<string | null>(null);
@@ -171,11 +211,32 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // 初回読み込み
+  // 初回マウント: URL から game を復元
   useEffect(() => {
+    setGame(readGameFromURL());
+  }, []);
+
+  // ゲーム変更時: URL クエリを同期しつつデータ再取得
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      if (game === "loto6") params.delete("game");
+      else params.set("game", game);
+      const qs = params.toString();
+      const newUrl = window.location.pathname + (qs ? `?${qs}` : "");
+      window.history.replaceState({}, "", newUrl);
+    }
+
+    setLoading(true);
+    setError(null);
+    setResult(null);
+    setSelectedTheme(null);
+    setMyPick(null);
+
+    const base = `${DATA_BASE_URL}/${game}`;
     Promise.all([
-      fetch(`${DATA_URL}/predictions.json`).then((r) => r.ok ? r.json() : Promise.reject(r.status)),
-      fetch(`${DATA_URL}/history.json`).then((r) => r.ok ? r.json() : null).catch(() => null),
+      fetch(`${base}/predictions.json`).then((r) => r.ok ? r.json() : Promise.reject(r.status)),
+      fetch(`${base}/history.json`).then((r) => r.ok ? r.json() : null).catch(() => null),
     ])
       .then(([predictions, history]) => {
         setData(predictions);
@@ -186,7 +247,7 @@ export default function Home() {
         setError(`データ取得に失敗しました: ${err}`);
         setLoading(false);
       });
-  }, []);
+  }, [game]);
 
   const handlePredict = (themeKey: string) => {
     if (!data) return;
@@ -225,14 +286,17 @@ export default function Home() {
   }
 
   const meta = data?.meta;
+  const gameLabel = GAMES.find((g) => g.key === game)?.label ?? "ロト6";
+  const gameAccent = GAMES.find((g) => g.key === game)?.accent ?? "from-indigo-400 to-purple-400";
 
   return (
     <main className="min-h-screen">
       {/* ヘッダー */}
       <header className="pt-12 pb-4 text-center">
+        <GameToggle game={game} onChange={setGame} />
         <h1 className="text-4xl font-bold tracking-tight mb-2">
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">
-            Loto6 Analyzer
+          <span className={`text-transparent bg-clip-text bg-gradient-to-r ${gameAccent}`}>
+            {gameLabel} Analyzer
           </span>
         </h1>
         <p className="text-gray-400 text-sm">
@@ -248,7 +312,7 @@ export default function Home() {
           </span>
           <span>
             当選番号: {meta.latest_draw.numbers.join(", ")} +{" "}
-            {meta.latest_draw.bonus}
+            {(meta.latest_draw.bonuses ?? [meta.latest_draw.bonus]).join(", ")}
           </span>
         </div>
       )}
@@ -358,13 +422,16 @@ export default function Home() {
                 (t) => t.key === result.theme.key
               )!;
 
-              // 逆張り度の計算
+              // 逆張り度の計算（ゲーム別閾値）
+              const contrarianHigh = game === "loto7" ? 28 : 32;
+              const maxRound = game === "loto7" ? 35 : 40;
+              const roundNums = new Set<number>();
+              for (let r = 5; r <= maxRound; r += 5) roundNums.add(r);
               const contrarianLevel = result.theme.key === "contrarian"
                 ? (() => {
-                    const highZone = pred.numbers.filter(n => n >= 32).length;
+                    const highZone = pred.numbers.filter(n => n >= contrarianHigh).length;
                     const sorted = [...pred.numbers].sort((a, b) => a - b);
                     const hasConsec = sorted.some((n, i) => i < sorted.length - 1 && sorted[i + 1] - n === 1);
-                    const roundNums = new Set([5, 10, 15, 20, 25, 30, 35, 40]);
                     const hasRound = pred.numbers.some(n => roundNums.has(n));
                     const score = highZone * 2 + (hasConsec ? 0 : 2) + (hasRound ? 0 : 1);
                     if (score >= 6) return { label: "強い逆張り", icon: "⚠️", color: "text-red-400" };
@@ -441,7 +508,7 @@ export default function Home() {
           </div>
 
           <p className="text-center text-xs text-gray-600 mt-8">
-            統計分析に基づく参考情報です。ロト6は完全なランダム抽選であり、
+            統計分析に基づく参考情報です。{gameLabel}は完全なランダム抽選であり、
             過去のデータから未来を予測することは理論上不可能です。
           </p>
         </section>
@@ -551,7 +618,7 @@ export default function Home() {
                           <div key={themeKey} className="flex items-center gap-2 text-xs">
                             <span>{theme.icon}</span>
                             <span className={grade?.color || "text-gray-400"}>
-                              {result.match_count}/6
+                              {result.match_count}/{meta?.pick_count ?? (game === "loto7" ? 7 : 6)}
                               {result.odd_even_match && " 奇偶○"}
                               {result.sum_range_match && " 合計○"}
                             </span>
@@ -584,7 +651,7 @@ export default function Home() {
               {meta.total_draws.toLocaleString()}回分
             </p>
           )}
-          <p>Loto6 Analyzer v1.0</p>
+          <p>{gameLabel} Analyzer v1.1</p>
         </div>
       </footer>
     </main>

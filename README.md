@@ -1,6 +1,6 @@
-# Loto6 Analyzer - ロト6 全盛り分析 & 予測ツール
+# Lottery Analyzer - ロト6 / ロト7 分析 & 予測ツール
 
-ロト6の過去全抽選データ（2000年10月〜現在）を多角的に統計分析し、スコアリングに基づいたおすすめ番号を生成するPythonツールです。
+ロト6 / ロト7 の過去全抽選データを多角的に統計分析し、スコアリングに基づいたおすすめ番号を生成する Python ツール & Web アプリです。Web 側ではヘッダーでロト6/ロト7 を切り替えて表示できます。
 
 ## セットアップ
 
@@ -84,8 +84,9 @@ python3 loto6_analyzer.py
 
 ## データソース
 
-- [KYO's LOTO6](https://loto6.thekyo.jp/) の CSV データ（Shift-JIS → UTF-8変換）
-- 全2094回分（2000/10/05〜2026/04/16時点）
+- ロト6: [KYO's LOTO6](https://loto6.thekyo.jp/) の CSV（Shift-JIS → UTF-8変換）/ 全2094回分
+- ロト7: [KYO's LOTO7](https://loto7.thekyo.jp/) の CSV（Shift-JIS → UTF-8変換）/ 全672回分
+- データ生成: `python3 scripts/generate.py [--game loto6|loto7|all]`
 
 ## 注意事項
 

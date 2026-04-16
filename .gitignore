@@ -7,6 +7,7 @@ venv/
 
 # Data (raw CSVs - generated JSONs are tracked)
 loto6_sjis.csv
+loto7_sjis.csv
 
 # Node
 node_modules/

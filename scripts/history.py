@@ -1,7 +1,9 @@
-"""ロト6 予測履歴・的中チェックモジュール"""
+"""ロト6 / ロト7 予測履歴・的中チェックモジュール"""
 import json
 import os
 from datetime import datetime
+
+from game_config import GameConfig
 
 
 def load_history(history_path: str) -> list[dict]:
@@ -21,45 +23,30 @@ def save_history(history_path: str, history: list[dict]):
         json.dump(history, f, ensure_ascii=False, indent=2)
 
 
-def check_match(prediction_numbers: list[int], actual_numbers: list[int]) -> dict:
-    """予測と実際の結果を比較
-
-    Returns:
-        {
-            "matched_numbers": [int, ...],
-            "match_count": int,
-            "odd_even_match": bool,
-            "high_low_match": bool,
-            "sum_range_match": bool,
-            "grade": str,  # "perfect", "excellent", "good", "close", "miss"
-        }
-    """
+def check_match(prediction_numbers: list[int], actual_numbers: list[int], cfg: GameConfig) -> dict:
+    """予測と実際の結果を比較"""
     pred_set = set(prediction_numbers)
     actual_set = set(actual_numbers)
     matched = sorted(pred_set & actual_set)
     match_count = len(matched)
 
-    # 奇偶一致
     pred_odd = sum(1 for n in prediction_numbers if n % 2 == 1)
     actual_odd = sum(1 for n in actual_numbers if n % 2 == 1)
     odd_even_match = pred_odd == actual_odd
 
-    # 高低一致
-    pred_low = sum(1 for n in prediction_numbers if n <= 21)
-    actual_low = sum(1 for n in actual_numbers if n <= 21)
+    pred_low = sum(1 for n in prediction_numbers if n <= cfg.low_high_split)
+    actual_low = sum(1 for n in actual_numbers if n <= cfg.low_high_split)
     high_low_match = pred_low == actual_low
 
-    # 合計値帯一致（±15以内）
     pred_sum = sum(prediction_numbers)
     actual_sum = sum(actual_numbers)
     sum_range_match = abs(pred_sum - actual_sum) <= 15
 
-    # グレード判定
-    if match_count == 6:
+    if match_count == cfg.pick_count:
         grade = "perfect"
-    elif match_count >= 4:
+    elif match_count >= cfg.pick_count - 2:
         grade = "excellent"
-    elif match_count >= 3:
+    elif match_count >= cfg.pick_count - 3:
         grade = "good"
     elif match_count >= 2 or (match_count >= 1 and odd_even_match and sum_range_match):
         grade = "close"
@@ -126,15 +113,8 @@ def save_predictions_to_history(history_path: str, predictions_data: dict,
     return entry
 
 
-def check_history_against_results(history_path: str, draws: list[dict]) -> list[dict]:
-    """未チェックの履歴を実際の結果と照合する
-
-    Args:
-        history_path: 履歴JSONのパス
-        draws: 全抽選データ
-
-    Returns: 更新された履歴
-    """
+def check_history_against_results(history_path: str, draws: list[dict], cfg: GameConfig) -> list[dict]:
+    """未チェックの履歴を実際の結果と照合する"""
     history = load_history(history_path)
     draw_map = {d["draw"]: d["numbers"] for d in draws}
     updated = False
@@ -145,7 +125,7 @@ def check_history_against_results(history_path: str, draws: list[dict]) -> list[
 
         target = entry["target_draw"]
         if target not in draw_map:
-            continue  # まだ抽選されていない
+            continue
 
         actual = draw_map[target]
         entry["actual"] = actual
@@ -153,7 +133,7 @@ def check_history_against_results(history_path: str, draws: list[dict]) -> list[
         entry["results"] = {}
 
         for theme_key, pred in entry["themes"].items():
-            result = check_match(pred["numbers"], actual)
+            result = check_match(pred["numbers"], actual, cfg)
             entry["results"][theme_key] = result
 
         updated = True

@@ -1,15 +1,17 @@
-"""ロト6 データ取得・整形モジュール"""
+"""ロト6 / ロト7 データ取得・整形モジュール"""
 import pandas as pd
 import subprocess
 import os
 
-def download_csv(output_dir: str) -> str:
+from game_config import GameConfig
+
+
+def download_csv(output_dir: str, cfg: GameConfig) -> str:
     """最新CSVをダウンロードしてUTF-8変換。CSVパスを返す"""
-    sjis_path = os.path.join(output_dir, "loto6_sjis.csv")
-    csv_path = os.path.join(output_dir, "loto6.csv")
+    sjis_path = os.path.join(output_dir, cfg.csv_sjis_filename)
+    csv_path = os.path.join(output_dir, cfg.csv_filename)
     subprocess.run(
-        ["curl", "-s", "-o", sjis_path,
-         "https://loto6.thekyo.jp/data/loto6.csv"],
+        ["curl", "-s", "-o", sjis_path, cfg.csv_url],
         timeout=30
     )
     with open(csv_path, "w") as f:
@@ -19,7 +21,8 @@ def download_csv(output_dir: str) -> str:
         )
     return csv_path
 
-def load_draws(csv_path: str) -> list[dict]:
+
+def load_draws(csv_path: str, cfg: GameConfig) -> list[dict]:
     """CSVを読み込み、抽選データのリストを返す
 
     Returns: list of dicts like:
@@ -27,22 +30,25 @@ def load_draws(csv_path: str) -> list[dict]:
             "draw": 1,
             "date": "2000-10-05",
             "numbers": [2, 8, 10, 13, 27, 30],
-            "bonus": 39,
+            "bonus": 39,              # 互換: bonuses[0]
+            "bonuses": [39],          # Loto7 は 2個
         }
     """
     df = pd.read_csv(csv_path)
-    num_cols = [f"第{i}数字" for i in range(1, 7)]
     draws = []
     for _, row in df.iterrows():
+        bonuses = [int(row[c]) for c in cfg.bonus_columns]
         draws.append({
             "draw": int(row["開催回"]),
             "date": pd.to_datetime(row["日付"]).strftime("%Y-%m-%d"),
-            "numbers": [int(row[c]) for c in num_cols],
-            "bonus": int(row["BONUS数字"]),
+            "numbers": [int(row[c]) for c in cfg.number_columns],
+            "bonus": bonuses[0],
+            "bonuses": bonuses,
         })
     return draws
 
-def get_latest_draws(output_dir: str) -> list[dict]:
+
+def get_latest_draws(output_dir: str, cfg: GameConfig) -> list[dict]:
     """ダウンロード→読み込みを一括で行う"""
-    csv_path = download_csv(output_dir)
-    return load_draws(csv_path)
+    csv_path = download_csv(output_dir, cfg)
+    return load_draws(csv_path, cfg)

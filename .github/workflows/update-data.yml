@@ -1,9 +1,10 @@
-name: Update Loto6 Data
+name: Update Lottery Data
 
 on:
   schedule:
-    # 毎週月・木の20:30 JST (11:30 UTC) - 抽選日の結果更新後
-    - cron: '30 11 * * 1,4'
+    # ロト6: 月・木 20:30 JST / ロト7: 金 20:30 JST
+    # 月=1 木=4 金=5 を全てカバー (抽選結果公開後)
+    - cron: '30 11 * * 1,4,5'
   workflow_dispatch: # 手動実行
 
 jobs:
@@ -22,13 +23,13 @@ jobs:
       - name: Install dependencies
         run: pip install pandas numpy
 
-      - name: Generate data
+      - name: Generate data (loto6 + loto7)
         run: python scripts/generate.py
 
       - name: Commit and push
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/ loto6.csv
-          git diff --staged --quiet || git commit -m "chore: update loto6 data $(date +%Y-%m-%d)"
+          git add data/ loto6.csv loto7.csv
+          git diff --staged --quiet || git commit -m "chore: update lottery data $(date +%Y-%m-%d)"
           git push

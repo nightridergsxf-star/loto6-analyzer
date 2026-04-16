@@ -1,21 +1,23 @@
-"""ロト6 分析モジュール（全13種）- 純粋データ返却、表示なし"""
+"""ロト6 / ロト7 分析モジュール（全13種）- 純粋データ返却、表示なし"""
 import numpy as np
 from collections import Counter, defaultdict
 from itertools import combinations
 
+from game_config import GameConfig
 
-def frequency(draws: list[dict]) -> dict:
-    """各番号(1-43)の出現回数・出現率"""
+
+def frequency(draws: list[dict], cfg: GameConfig) -> dict:
+    """各番号の出現回数・出現率"""
     all_nums = []
     for d in draws:
         all_nums.extend(d["numbers"])
 
     total = len(draws)
     freq = Counter(all_nums)
-    expected = total * 6 / 43
+    expected = total * cfg.pick_count / cfg.max_number
 
     numbers = {}
-    for n in range(1, 44):
+    for n in cfg.number_range:
         count = freq.get(n, 0)
         numbers[n] = {
             "count": count,
@@ -33,9 +35,12 @@ def frequency(draws: list[dict]) -> dict:
     }
 
 
-def bonus_frequency(draws: list[dict]) -> dict:
-    """ボーナス数字の出現傾向"""
-    freq = Counter(d["bonus"] for d in draws)
+def bonus_frequency(draws: list[dict], cfg: GameConfig) -> dict:
+    """ボーナス数字の出現傾向 (Loto7 は 2個分を合算)"""
+    all_bonuses = []
+    for d in draws:
+        all_bonuses.extend(d.get("bonuses", [d["bonus"]]))
+    freq = Counter(all_bonuses)
     sorted_freq = sorted(freq.items(), key=lambda x: x[1], reverse=True)
     return {
         "top10": [{"number": n, "count": c} for n, c in sorted_freq[:10]],
@@ -43,7 +48,7 @@ def bonus_frequency(draws: list[dict]) -> dict:
     }
 
 
-def consecutive_pairs(draws: list[dict]) -> dict:
+def consecutive_pairs(draws: list[dict], cfg: GameConfig) -> dict:
     """連番ペアの出現分析"""
     consec_per_draw = []
     draws_with = 0
@@ -67,12 +72,12 @@ def consecutive_pairs(draws: list[dict]) -> dict:
     }
 
 
-def odd_even_balance(draws: list[dict]) -> dict:
+def odd_even_balance(draws: list[dict], cfg: GameConfig) -> dict:
     """奇数・偶数の比率"""
     patterns = Counter()
     for d in draws:
         odd = sum(1 for n in d["numbers"] if n % 2 == 1)
-        patterns[(odd, 6 - odd)] += 1
+        patterns[(odd, cfg.pick_count - odd)] += 1
 
     total = len(draws)
     return {
@@ -83,12 +88,12 @@ def odd_even_balance(draws: list[dict]) -> dict:
     }
 
 
-def high_low_balance(draws: list[dict]) -> dict:
-    """高低バランス (低1-21 / 高22-43)"""
+def high_low_balance(draws: list[dict], cfg: GameConfig) -> dict:
+    """高低バランス (低1〜split / 高 split+1〜max)"""
     patterns = Counter()
     for d in draws:
-        low = sum(1 for n in d["numbers"] if n <= 21)
-        patterns[(low, 6 - low)] += 1
+        low = sum(1 for n in d["numbers"] if n <= cfg.low_high_split)
+        patterns[(low, cfg.pick_count - low)] += 1
 
     total = len(draws)
     return {
@@ -99,9 +104,9 @@ def high_low_balance(draws: list[dict]) -> dict:
     }
 
 
-def decade_distribution(draws: list[dict]) -> dict:
+def decade_distribution(draws: list[dict], cfg: GameConfig) -> dict:
     """十の位グループの分布"""
-    groups = [("1-9", 1, 9), ("10-19", 10, 19), ("20-29", 20, 29), ("30-39", 30, 39), ("40-43", 40, 43)]
+    groups = cfg.decade_buckets
     counts = defaultdict(int)
     total_nums = 0
 
@@ -117,13 +122,13 @@ def decade_distribution(draws: list[dict]) -> dict:
         "groups": [
             {"name": name, "count": counts[name],
              "rate": round(counts[name]/total_nums*100, 1),
-             "expected_rate": round((hi-lo+1)/43*100, 1)}
+             "expected_rate": round((hi-lo+1)/cfg.max_number*100, 1)}
             for name, lo, hi in groups
         ]
     }
 
 
-def tail_distribution(draws: list[dict]) -> dict:
+def tail_distribution(draws: list[dict], cfg: GameConfig) -> dict:
     """末尾数字の分布"""
     tails = Counter()
     total_nums = 0
@@ -140,7 +145,7 @@ def tail_distribution(draws: list[dict]) -> dict:
     }
 
 
-def hot_cold(draws: list[dict], recent_n: int = 30) -> dict:
+def hot_cold(draws: list[dict], cfg: GameConfig, recent_n: int = 30) -> dict:
     """直近N回のホット/コールドナンバー"""
     recent = draws[-recent_n:]
     recent_nums = []
@@ -148,14 +153,14 @@ def hot_cold(draws: list[dict], recent_n: int = 30) -> dict:
         recent_nums.extend(d["numbers"])
 
     freq = Counter(recent_nums)
-    expected = recent_n * 6 / 43
+    expected = recent_n * cfg.pick_count / cfg.max_number
 
-    all_numbers = set(range(1, 44))
+    all_numbers = set(cfg.number_range)
     appeared = set(freq.keys())
     not_appeared = sorted(all_numbers - appeared)
 
     hot = sorted(freq.items(), key=lambda x: x[1], reverse=True)[:10]
-    cold_list = [(n, freq.get(n, 0)) for n in range(1, 44)]
+    cold_list = [(n, freq.get(n, 0)) for n in cfg.number_range]
     cold = sorted(cold_list, key=lambda x: x[1])[:10]
 
     return {
@@ -164,11 +169,11 @@ def hot_cold(draws: list[dict], recent_n: int = 30) -> dict:
         "hot": [{"number": n, "count": c, "ratio": round(c/expected, 1)} for n, c in hot],
         "cold": [{"number": n, "count": c} for n, c in cold],
         "not_appeared": not_appeared,
-        "freq": {n: freq.get(n, 0) for n in range(1, 44)},
+        "freq": {n: freq.get(n, 0) for n in cfg.number_range},
     }
 
 
-def intervals(draws: list[dict]) -> dict:
+def intervals(draws: list[dict], cfg: GameConfig) -> dict:
     """出現間隔（インターバル）分析"""
     last_seen = {}
     interval_data = defaultdict(list)
@@ -182,12 +187,12 @@ def intervals(draws: list[dict]) -> dict:
 
     latest_draw = draws[-1]["draw"]
     current = {}
-    for n in range(1, 44):
+    for n in cfg.number_range:
         current[n] = latest_draw - last_seen[n] if n in last_seen else latest_draw
 
     numbers = {}
     overdue = []
-    for n in range(1, 44):
+    for n in cfg.number_range:
         if interval_data[n]:
             avg = float(np.mean(interval_data[n]))
             max_int = max(interval_data[n])
@@ -207,12 +212,12 @@ def intervals(draws: list[dict]) -> dict:
     return {
         "numbers": numbers,
         "overdue_top5": overdue[:5],
-        "intervals": {n: interval_data[n] for n in range(1, 44)},
+        "intervals": {n: interval_data[n] for n in cfg.number_range},
         "current": current,
     }
 
 
-def carryover(draws: list[dict]) -> dict:
+def carryover(draws: list[dict], cfg: GameConfig) -> dict:
     """前回引っ張り分析"""
     counts = []
     for i in range(1, len(draws)):
@@ -231,13 +236,13 @@ def carryover(draws: list[dict]) -> dict:
     }
 
 
-def sum_analysis(draws: list[dict]) -> dict:
+def sum_analysis(draws: list[dict], cfg: GameConfig) -> dict:
     """合計値分析"""
     sums = [sum(d["numbers"]) for d in draws]
     mean = float(np.mean(sums))
     std = float(np.std(sums))
 
-    bins = [(50, 80), (81, 100), (101, 120), (121, 140), (141, 160), (161, 180), (181, 210)]
+    bins = cfg.sum_bins
     total = len(sums)
 
     return {
@@ -255,9 +260,8 @@ def sum_analysis(draws: list[dict]) -> dict:
     }
 
 
-def monthly(draws: list[dict]) -> dict:
+def monthly(draws: list[dict], cfg: GameConfig) -> dict:
     """月別出現傾向"""
-    from datetime import datetime
     monthly_freq = defaultdict(Counter)
     for d in draws:
         month = int(d["date"].split("-")[1])
@@ -271,7 +275,7 @@ def monthly(draws: list[dict]) -> dict:
     return result
 
 
-def pair_correlation(draws: list[dict]) -> dict:
+def pair_correlation(draws: list[dict], cfg: GameConfig) -> dict:
     """ペア相関分析"""
     pair_counts = Counter()
     for d in draws:
@@ -279,7 +283,9 @@ def pair_correlation(draws: list[dict]) -> dict:
             pair_counts[pair] += 1
 
     total = len(draws)
-    expected = total * (6 * 5) / (43 * 42)
+    k = cfg.pick_count
+    m = cfg.max_number
+    expected = total * (k * (k - 1)) / (m * (m - 1))
 
     top20 = pair_counts.most_common(20)
     return {
@@ -291,20 +297,20 @@ def pair_correlation(draws: list[dict]) -> dict:
     }
 
 
-def run_all(draws: list[dict]) -> dict:
+def run_all(draws: list[dict], cfg: GameConfig) -> dict:
     """全分析を実行して結果をまとめて返す"""
     return {
-        "frequency": frequency(draws),
-        "bonus": bonus_frequency(draws),
-        "consecutive": consecutive_pairs(draws),
-        "odd_even": odd_even_balance(draws),
-        "high_low": high_low_balance(draws),
-        "decade": decade_distribution(draws),
-        "tail": tail_distribution(draws),
-        "hot_cold": hot_cold(draws),
-        "intervals": intervals(draws),
-        "carryover": carryover(draws),
-        "sum": sum_analysis(draws),
-        "monthly": monthly(draws),
-        "pair_correlation": pair_correlation(draws),
+        "frequency": frequency(draws, cfg),
+        "bonus": bonus_frequency(draws, cfg),
+        "consecutive": consecutive_pairs(draws, cfg),
+        "odd_even": odd_even_balance(draws, cfg),
+        "high_low": high_low_balance(draws, cfg),
+        "decade": decade_distribution(draws, cfg),
+        "tail": tail_distribution(draws, cfg),
+        "hot_cold": hot_cold(draws, cfg),
+        "intervals": intervals(draws, cfg),
+        "carryover": carryover(draws, cfg),
+        "sum": sum_analysis(draws, cfg),
+        "monthly": monthly(draws, cfg),
+        "pair_correlation": pair_correlation(draws, cfg),
     }

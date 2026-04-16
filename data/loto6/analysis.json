@@ -13732,39 +13732,44 @@
     },
     "distribution": [
       {
-        "range": "50-80",
-        "count": 68,
-        "rate": 3.2
+        "range": "21-51",
+        "count": 3,
+        "rate": 0.1
       },
       {
-        "range": "81-100",
-        "count": 219,
-        "rate": 10.5
+        "range": "52-82",
+        "count": 72,
+        "rate": 3.4
       },
       {
-        "range": "101-120",
-        "count": 419,
-        "rate": 20.0
+        "range": "83-113",
+        "count": 446,
+        "rate": 21.3
       },
       {
-        "range": "121-140",
-        "count": 574,
-        "rate": 27.4
+        "range": "114-144",
+        "count": 892,
+        "rate": 42.6
       },
       {
-        "range": "141-160",
-        "count": 478,
-        "rate": 22.8
+        "range": "145-175",
+        "count": 527,
+        "rate": 25.2
       },
       {
-        "range": "161-180",
-        "count": 223,
-        "rate": 10.6
+        "range": "176-206",
+        "count": 150,
+        "rate": 7.2
       },
       {
-        "range": "181-210",
-        "count": 109,
-        "rate": 5.2
+        "range": "207-237",
+        "count": 4,
+        "rate": 0.2
+      },
+      {
+        "range": "238-243",
+        "count": 0,
+        "rate": 0.0
       }
     ]
   },

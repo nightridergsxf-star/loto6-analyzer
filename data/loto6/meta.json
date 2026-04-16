@@ -1,5 +1,11 @@
 {
-  "generated_at": "2026-04-16T14:47:26.431509",
+  "game": "loto6",
+  "display_name": "ロト6",
+  "max_number": 43,
+  "pick_count": 6,
+  "bonus_count": 1,
+  "low_high_split": 21,
+  "generated_at": "2026-04-17T00:04:48.352048",
   "total_draws": 2094,
   "latest_draw": {
     "number": 2094,
@@ -12,7 +18,10 @@
       24,
       30
     ],
-    "bonus": 16
+    "bonus": 16,
+    "bonuses": [
+      16
+    ]
   },
   "date_range": {
     "from": "2000-10-05",

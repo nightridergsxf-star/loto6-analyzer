@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Loto6 Analyzer - ロト6予測",
-  description: "ロト6の過去データを統計分析し、テーマ別のおすすめ番号を生成",
+  title: "Lottery Analyzer - ロト6/ロト7 予測",
+  description: "ロト6・ロト7 の過去データを統計分析し、テーマ別のおすすめ番号を生成",
 };
 
 export default function RootLayout({
