@@ -6,46 +6,30 @@
     "pick_count": 6,
     "bonus_count": 1,
     "low_high_split": 21,
-    "generated_at": "2026-04-27T12:59:39.654495",
-    "total_draws": 2097,
+    "generated_at": "2026-04-30T13:02:43.841320",
+    "total_draws": 2098,
     "latest_draw": {
-      "number": 2097,
-      "date": "2026-04-27",
+      "number": 2098,
+      "date": "2026-04-30",
       "numbers": [
-        3,
-        20,
-        24,
-        27,
-        34,
+        1,
+        6,
+        15,
+        18,
+        19,
         42
       ],
-      "bonus": 37,
+      "bonus": 24,
       "bonuses": [
-        37
+        24
       ]
     },
     "date_range": {
       "from": "2000-10-05",
-      "to": "2026-04-27"
+      "to": "2026-04-30"
     }
   },
   "draws": [
-    {
-      "draw": 1998,
-      "date": "2025-05-12",
-      "numbers": [
-        1,
-        4,
-        6,
-        9,
-        20,
-        43
-      ],
-      "bonus": 21,
-      "bonuses": [
-        21
-      ]
-    },
     {
       "draw": 1999,
       "date": "2025-05-15",
@@ -1628,6 +1612,22 @@
       "bonus": 37,
       "bonuses": [
         37
+      ]
+    },
+    {
+      "draw": 2098,
+      "date": "2026-04-30",
+      "numbers": [
+        1,
+        6,
+        15,
+        18,
+        19,
+        42
+      ],
+      "bonus": 24,
+      "bonuses": [
+        24
       ]
     }
   ]
