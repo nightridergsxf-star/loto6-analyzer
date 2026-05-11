@@ -6,31 +6,31 @@
     "pick_count": 6,
     "bonus_count": 1,
     "low_high_split": 21,
-    "generated_at": "2026-05-08T12:51:54.025648",
-    "total_draws": 2100,
+    "generated_at": "2026-05-11T14:02:18.603702",
+    "total_draws": 2101,
     "latest_draw": {
-      "number": 2100,
-      "date": "2026-05-07",
+      "number": 2101,
+      "date": "2026-05-11",
       "numbers": [
-        8,
+        1,
         17,
-        24,
-        32,
-        35,
-        41
+        29,
+        33,
+        40,
+        42
       ],
-      "bonus": 28,
+      "bonus": 21,
       "bonuses": [
-        28
+        21
       ]
     },
     "date_range": {
       "from": "2000-10-05",
-      "to": "2026-05-07"
+      "to": "2026-05-11"
     }
   },
   "summary": {
-    "total_checked": 6,
+    "total_checked": 7,
     "theme_stats": {
       "hot_pursuit": {
         "grades": {
@@ -38,12 +38,12 @@
           "excellent": 0,
           "good": 0,
           "close": 2,
-          "miss": 4
+          "miss": 5
         },
         "odd_even_matches": 0,
         "sum_range_matches": 2,
-        "total": 6,
-        "avg_match": 0.83,
+        "total": 7,
+        "avg_match": 0.71,
         "best_match": 2
       },
       "cold_rebound": {
@@ -52,12 +52,12 @@
           "excellent": 0,
           "good": 1,
           "close": 2,
-          "miss": 3
+          "miss": 4
         },
         "odd_even_matches": 0,
         "sum_range_matches": 3,
-        "total": 6,
-        "avg_match": 1.5,
+        "total": 7,
+        "avg_match": 1.43,
         "best_match": 3
       },
       "balanced": {
@@ -66,12 +66,12 @@
           "excellent": 0,
           "good": 0,
           "close": 2,
-          "miss": 4
+          "miss": 5
         },
         "odd_even_matches": 2,
         "sum_range_matches": 3,
-        "total": 6,
-        "avg_match": 1.0,
+        "total": 7,
+        "avg_match": 0.86,
         "best_match": 2
       },
       "center_cluster": {
@@ -80,12 +80,12 @@
           "excellent": 0,
           "good": 0,
           "close": 0,
-          "miss": 6
+          "miss": 7
         },
         "odd_even_matches": 3,
         "sum_range_matches": 2,
-        "total": 6,
-        "avg_match": 0.67,
+        "total": 7,
+        "avg_match": 0.57,
         "best_match": 1
       },
       "wildcard": {
@@ -94,12 +94,12 @@
           "excellent": 0,
           "good": 0,
           "close": 1,
-          "miss": 5
+          "miss": 6
         },
         "odd_even_matches": 3,
         "sum_range_matches": 3,
-        "total": 6,
-        "avg_match": 0.83,
+        "total": 7,
+        "avg_match": 0.71,
         "best_match": 1
       },
       "contrarian": {
@@ -108,16 +108,194 @@
           "excellent": 0,
           "good": 1,
           "close": 1,
-          "miss": 4
+          "miss": 5
         },
         "odd_even_matches": 3,
         "sum_range_matches": 2,
-        "total": 6,
-        "avg_match": 1.17,
+        "total": 7,
+        "avg_match": 1.0,
         "best_match": 3
       }
     },
     "recent": [
+      {
+        "generated_at": "2026-05-07T13:14:03.107049",
+        "target_draw": 2101,
+        "based_on_draw": 2100,
+        "based_on_date": "2026-05-07",
+        "themes": {
+          "hot_pursuit": {
+            "numbers": [
+              8,
+              15,
+              18,
+              24,
+              26,
+              37
+            ],
+            "total": 128,
+            "score": 65.74,
+            "reasons": [
+              "8,18,24,26は直近ホット",
+              "8,24は前回引っ張り",
+              "合計値が最適帯"
+            ]
+          },
+          "cold_rebound": {
+            "numbers": [
+              5,
+              12,
+              14,
+              25,
+              31,
+              40
+            ],
+            "total": 127,
+            "score": 70.57,
+            "reasons": [
+              "5,12,14,31,40は出遅れ反発",
+              "奇偶バランス3:3",
+              "合計値が最適帯"
+            ]
+          },
+          "balanced": {
+            "numbers": [
+              5,
+              8,
+              18,
+              24,
+              37,
+              43
+            ],
+            "total": 135,
+            "score": 56.09,
+            "reasons": [
+              "8,18,24は直近ホット",
+              "5は出遅れ反発",
+              "8,24は前回引っ張り",
+              "奇偶バランス3:3",
+              "合計値が最適帯"
+            ]
+          },
+          "center_cluster": {
+            "numbers": [
+              6,
+              8,
+              18,
+              24,
+              37,
+              43
+            ],
+            "total": 136,
+            "score": 83.87,
+            "reasons": [
+              "8,18,24は直近ホット",
+              "8,24は前回引っ張り",
+              "合計値が最適帯"
+            ]
+          },
+          "wildcard": {
+            "numbers": [
+              5,
+              14,
+              18,
+              24,
+              35,
+              43
+            ],
+            "total": 139,
+            "score": 59.61,
+            "reasons": [
+              "18,24は直近ホット",
+              "5,14は出遅れ反発",
+              "24,35は前回引っ張り",
+              "奇偶バランス3:3",
+              "合計値が最適帯"
+            ]
+          },
+          "contrarian": {
+            "numbers": [
+              6,
+              15,
+              18,
+              24,
+              39,
+              43
+            ],
+            "total": 145,
+            "score": 36.79,
+            "reasons": [
+              "18,24は直近ホット",
+              "24は前回引っ張り",
+              "奇偶バランス3:3",
+              "合計値が最適帯",
+              "39,43は誕生日圏外",
+              "連番なし（人が選ぶパターンを回避）"
+            ]
+          }
+        },
+        "checked": true,
+        "actual": [
+          1,
+          17,
+          29,
+          33,
+          40,
+          42
+        ],
+        "results": {
+          "hot_pursuit": {
+            "matched_numbers": [],
+            "match_count": 0,
+            "odd_even_match": false,
+            "high_low_match": false,
+            "sum_range_match": false,
+            "grade": "miss"
+          },
+          "cold_rebound": {
+            "matched_numbers": [
+              40
+            ],
+            "match_count": 1,
+            "odd_even_match": false,
+            "high_low_match": false,
+            "sum_range_match": false,
+            "grade": "miss"
+          },
+          "balanced": {
+            "matched_numbers": [],
+            "match_count": 0,
+            "odd_even_match": false,
+            "high_low_match": false,
+            "sum_range_match": false,
+            "grade": "miss"
+          },
+          "center_cluster": {
+            "matched_numbers": [],
+            "match_count": 0,
+            "odd_even_match": false,
+            "high_low_match": false,
+            "sum_range_match": false,
+            "grade": "miss"
+          },
+          "wildcard": {
+            "matched_numbers": [],
+            "match_count": 0,
+            "odd_even_match": false,
+            "high_low_match": false,
+            "sum_range_match": false,
+            "grade": "miss"
+          },
+          "contrarian": {
+            "matched_numbers": [],
+            "match_count": 0,
+            "odd_even_match": false,
+            "high_low_match": false,
+            "sum_range_match": false,
+            "grade": "miss"
+          }
+        }
+      },
       {
         "generated_at": "2026-05-04T13:04:41.456556",
         "target_draw": 2100,
@@ -854,192 +1032,6 @@
             "high_low_match": false,
             "sum_range_match": false,
             "grade": "miss"
-          }
-        }
-      },
-      {
-        "generated_at": "2026-04-20T12:44:52.820443",
-        "target_draw": 2096,
-        "based_on_draw": 2095,
-        "based_on_date": "2026-04-20",
-        "themes": {
-          "hot_pursuit": {
-            "numbers": [
-              6,
-              10,
-              24,
-              26,
-              30,
-              37
-            ],
-            "total": 133,
-            "score": 60.28,
-            "reasons": [
-              "10,24,30,37は直近ホット",
-              "30は前回引っ張り",
-              "合計値が最適帯"
-            ]
-          },
-          "cold_rebound": {
-            "numbers": [
-              1,
-              5,
-              14,
-              33,
-              34,
-              42
-            ],
-            "total": 129,
-            "score": 73.73,
-            "reasons": [
-              "1,33,34,42は出遅れ反発",
-              "奇偶バランス3:3",
-              "合計値が最適帯"
-            ]
-          },
-          "balanced": {
-            "numbers": [
-              8,
-              10,
-              14,
-              26,
-              33,
-              37
-            ],
-            "total": 128,
-            "score": 48.9,
-            "reasons": [
-              "8,10,37は直近ホット",
-              "33は出遅れ反発",
-              "合計値が最適帯"
-            ]
-          },
-          "center_cluster": {
-            "numbers": [
-              6,
-              8,
-              10,
-              29,
-              37,
-              39
-            ],
-            "total": 129,
-            "score": 78.49,
-            "reasons": [
-              "8,10,37は直近ホット",
-              "奇偶バランス3:3",
-              "合計値が最適帯"
-            ]
-          },
-          "wildcard": {
-            "numbers": [
-              1,
-              6,
-              14,
-              33,
-              37,
-              42
-            ],
-            "total": 133,
-            "score": 57.17,
-            "reasons": [
-              "37は直近ホット",
-              "1,33,42は出遅れ反発",
-              "奇偶バランス3:3",
-              "合計値が最適帯"
-            ]
-          },
-          "contrarian": {
-            "numbers": [
-              8,
-              13,
-              15,
-              24,
-              33,
-              35
-            ],
-            "total": 128,
-            "score": 37.38,
-            "reasons": [
-              "8,24は直近ホット",
-              "33は出遅れ反発",
-              "13は前回引っ張り",
-              "合計値が最適帯",
-              "33,35は誕生日圏外",
-              "連番なし（人が選ぶパターンを回避）"
-            ]
-          }
-        },
-        "checked": true,
-        "actual": [
-          8,
-          15,
-          18,
-          21,
-          33,
-          43
-        ],
-        "results": {
-          "hot_pursuit": {
-            "matched_numbers": [],
-            "match_count": 0,
-            "odd_even_match": false,
-            "high_low_match": false,
-            "sum_range_match": true,
-            "grade": "miss"
-          },
-          "cold_rebound": {
-            "matched_numbers": [
-              33
-            ],
-            "match_count": 1,
-            "odd_even_match": false,
-            "high_low_match": false,
-            "sum_range_match": true,
-            "grade": "miss"
-          },
-          "balanced": {
-            "matched_numbers": [
-              8,
-              33
-            ],
-            "match_count": 2,
-            "odd_even_match": false,
-            "high_low_match": false,
-            "sum_range_match": true,
-            "grade": "close"
-          },
-          "center_cluster": {
-            "matched_numbers": [
-              8
-            ],
-            "match_count": 1,
-            "odd_even_match": false,
-            "high_low_match": false,
-            "sum_range_match": true,
-            "grade": "miss"
-          },
-          "wildcard": {
-            "matched_numbers": [
-              33
-            ],
-            "match_count": 1,
-            "odd_even_match": false,
-            "high_low_match": false,
-            "sum_range_match": true,
-            "grade": "miss"
-          },
-          "contrarian": {
-            "matched_numbers": [
-              8,
-              15,
-              33
-            ],
-            "match_count": 3,
-            "odd_even_match": true,
-            "high_low_match": false,
-            "sum_range_match": true,
-            "grade": "good"
           }
         }
       }
@@ -2261,6 +2253,181 @@
             "合計値が最適帯",
             "39,43は誕生日圏外",
             "連番なし（人が選ぶパターンを回避）"
+          ]
+        }
+      },
+      "checked": true,
+      "actual": [
+        1,
+        17,
+        29,
+        33,
+        40,
+        42
+      ],
+      "results": {
+        "hot_pursuit": {
+          "matched_numbers": [],
+          "match_count": 0,
+          "odd_even_match": false,
+          "high_low_match": false,
+          "sum_range_match": false,
+          "grade": "miss"
+        },
+        "cold_rebound": {
+          "matched_numbers": [
+            40
+          ],
+          "match_count": 1,
+          "odd_even_match": false,
+          "high_low_match": false,
+          "sum_range_match": false,
+          "grade": "miss"
+        },
+        "balanced": {
+          "matched_numbers": [],
+          "match_count": 0,
+          "odd_even_match": false,
+          "high_low_match": false,
+          "sum_range_match": false,
+          "grade": "miss"
+        },
+        "center_cluster": {
+          "matched_numbers": [],
+          "match_count": 0,
+          "odd_even_match": false,
+          "high_low_match": false,
+          "sum_range_match": false,
+          "grade": "miss"
+        },
+        "wildcard": {
+          "matched_numbers": [],
+          "match_count": 0,
+          "odd_even_match": false,
+          "high_low_match": false,
+          "sum_range_match": false,
+          "grade": "miss"
+        },
+        "contrarian": {
+          "matched_numbers": [],
+          "match_count": 0,
+          "odd_even_match": false,
+          "high_low_match": false,
+          "sum_range_match": false,
+          "grade": "miss"
+        }
+      }
+    },
+    {
+      "generated_at": "2026-05-11T14:02:18.603702",
+      "target_draw": 2102,
+      "based_on_draw": 2101,
+      "based_on_date": "2026-05-11",
+      "themes": {
+        "hot_pursuit": {
+          "numbers": [
+            8,
+            17,
+            18,
+            24,
+            26,
+            39
+          ],
+          "total": 132,
+          "score": 64.43,
+          "reasons": [
+            "8,18,24,26は直近ホット",
+            "17は前回引っ張り",
+            "合計値が最適帯"
+          ]
+        },
+        "cold_rebound": {
+          "numbers": [
+            5,
+            12,
+            14,
+            31,
+            37,
+            38
+          ],
+          "total": 137,
+          "score": 69.68,
+          "reasons": [
+            "5,12,14,31は出遅れ反発",
+            "奇偶バランス3:3",
+            "合計値が最適帯"
+          ]
+        },
+        "balanced": {
+          "numbers": [
+            5,
+            14,
+            16,
+            24,
+            36,
+            37
+          ],
+          "total": 132,
+          "score": 51.0,
+          "reasons": [
+            "24,36は直近ホット",
+            "5,14は出遅れ反発",
+            "合計値が最適帯"
+          ]
+        },
+        "center_cluster": {
+          "numbers": [
+            7,
+            12,
+            18,
+            24,
+            35,
+            37
+          ],
+          "total": 133,
+          "score": 76.3,
+          "reasons": [
+            "18,24は直近ホット",
+            "12は出遅れ反発",
+            "奇偶バランス3:3",
+            "合計値が最適帯"
+          ]
+        },
+        "wildcard": {
+          "numbers": [
+            5,
+            8,
+            16,
+            24,
+            37,
+            39
+          ],
+          "total": 129,
+          "score": 57.26,
+          "reasons": [
+            "8,24は直近ホット",
+            "5は出遅れ反発",
+            "奇偶バランス3:3",
+            "合計値が最適帯"
+          ]
+        },
+        "contrarian": {
+          "numbers": [
+            8,
+            9,
+            10,
+            27,
+            37,
+            42
+          ],
+          "total": 133,
+          "score": 32.33,
+          "reasons": [
+            "8は直近ホット",
+            "42は前回引っ張り",
+            "奇偶バランス3:3",
+            "合計値が最適帯",
+            "37,42は誕生日圏外"
           ]
         }
       },
