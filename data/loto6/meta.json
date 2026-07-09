@@ -5,26 +5,26 @@
   "pick_count": 6,
   "bonus_count": 1,
   "low_high_split": 21,
-  "generated_at": "2026-07-06T14:41:29.886332",
-  "total_draws": 2117,
+  "generated_at": "2026-07-09T14:01:51.163124",
+  "total_draws": 2118,
   "latest_draw": {
-    "number": 2117,
-    "date": "2026-07-06",
+    "number": 2118,
+    "date": "2026-07-09",
     "numbers": [
-      4,
-      7,
-      26,
-      27,
+      1,
+      5,
+      8,
       35,
-      41
+      36,
+      37
     ],
-    "bonus": 34,
+    "bonus": 24,
     "bonuses": [
-      34
+      24
     ]
   },
   "date_range": {
     "from": "2000-10-05",
-    "to": "2026-07-06"
+    "to": "2026-07-09"
   }
 }
