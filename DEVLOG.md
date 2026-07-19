@@ -1,5 +1,26 @@
 # DEVLOG
 
+## 2026-07-19 本番サイト 404 復旧 & デプロイ運用の見直し
+### 実施内容
+- ユーザー報告「サイトが見れない（404 / データ読み込み中で停止）」を調査
+- 原因特定:
+  - `loto6-analyzer.pages.dev` が配信していたのは **ロト7 リファクタ前の旧ビルド**（タイトル `Loto6 Analyzer - ロト6予測`）
+  - 旧ビルドの JS が移動前のフラットなデータパス (`data/meta.json` 等) を fetch → 現在は `data/{loto6,loto7}/` へ移動済みのため **404**
+  - Cloudflare Pages ダッシュボードで確認: **最新デプロイが約4ヶ月前**。git 連携ではなく **手動アップロード運用**だったため、以降の push（ロト7対応・データ更新bot）が一切本番反映されていなかった
+- 応急復旧: `frontend/out`（最新ビルド）を Pages に手動アップロードして本番反映 → 復旧確認
+- ローカルは終始正常（`npm run build` 成功、raw データ URL は両ゲーム 200）
+
+### 成果
+- 本番サイト復旧（ロト6/ロト7 切替トグル表示・データ取得 OK）
+
+### 課題・備考
+- **恒久対策として Cloudflare Pages を Git 連携に切替（対応 A）→ 実施完了**
+  - Settings → Build → Git repository を `nightridergsxf-star/loto6-analyzer` に Connect
+  - Build configuration: Root directory=`frontend` / Build command=`npm run build` / Build output=`out`
+  - Branch control: Production branch=`main` / Automatic deployments=Enabled
+  - 以降 push で自動デプロイ。データ更新bot のコミットも本番反映されるようになった
+- 旧運用（手動アップロード）に戻さないこと。データ更新bot が動いても本番が古いままになる原因だった
+
 ## 2026-04-17 ロト7 対応（ゲーム切替アーキテクチャ）
 ### 実施内容
 - `scripts/game_config.py` 新設: `GameConfig` dataclass + LOTO6 / LOTO7 インスタンス
