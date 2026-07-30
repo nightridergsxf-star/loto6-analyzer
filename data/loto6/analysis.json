@@ -1,232 +1,232 @@
 {
   "frequency": {
-    "total_draws": 2123,
-    "expected": 296.2,
+    "total_draws": 2124,
+    "expected": 296.4,
     "numbers": {
       "1": {
         "count": 297,
-        "rate": 13.99,
-        "deviation": 0.8
+        "rate": 13.98,
+        "deviation": 0.6
       },
       "2": {
         "count": 316,
         "rate": 14.88,
-        "deviation": 19.8
+        "deviation": 19.6
       },
       "3": {
         "count": 290,
-        "rate": 13.66,
-        "deviation": -6.2
+        "rate": 13.65,
+        "deviation": -6.4
       },
       "4": {
         "count": 289,
         "rate": 13.61,
-        "deviation": -7.2
+        "deviation": -7.4
       },
       "5": {
         "count": 303,
         "rate": 14.27,
-        "deviation": 6.8
+        "deviation": 6.6
       },
       "6": {
-        "count": 327,
-        "rate": 15.4,
-        "deviation": 30.8
+        "count": 328,
+        "rate": 15.44,
+        "deviation": 31.6
       },
       "7": {
         "count": 273,
-        "rate": 12.86,
-        "deviation": -23.2
+        "rate": 12.85,
+        "deviation": -23.4
       },
       "8": {
         "count": 297,
-        "rate": 13.99,
-        "deviation": 0.8
+        "rate": 13.98,
+        "deviation": 0.6
       },
       "9": {
         "count": 258,
         "rate": 12.15,
-        "deviation": -38.2
+        "deviation": -38.4
       },
       "10": {
         "count": 307,
-        "rate": 14.46,
-        "deviation": 10.8
+        "rate": 14.45,
+        "deviation": 10.6
       },
       "11": {
         "count": 282,
         "rate": 13.28,
-        "deviation": -14.2
+        "deviation": -14.4
       },
       "12": {
         "count": 290,
-        "rate": 13.66,
-        "deviation": -6.2
+        "rate": 13.65,
+        "deviation": -6.4
       },
       "13": {
         "count": 276,
-        "rate": 13.0,
-        "deviation": -20.2
+        "rate": 12.99,
+        "deviation": -20.4
       },
       "14": {
         "count": 286,
         "rate": 13.47,
-        "deviation": -10.2
+        "deviation": -10.4
       },
       "15": {
         "count": 307,
-        "rate": 14.46,
-        "deviation": 10.8
+        "rate": 14.45,
+        "deviation": 10.6
       },
       "16": {
         "count": 298,
-        "rate": 14.04,
-        "deviation": 1.8
+        "rate": 14.03,
+        "deviation": 1.6
       },
       "17": {
         "count": 275,
         "rate": 12.95,
-        "deviation": -21.2
+        "deviation": -21.4
       },
       "18": {
         "count": 303,
         "rate": 14.27,
-        "deviation": 6.8
+        "deviation": 6.6
       },
       "19": {
         "count": 309,
         "rate": 14.55,
-        "deviation": 12.8
+        "deviation": 12.6
       },
       "20": {
-        "count": 296,
-        "rate": 13.94,
-        "deviation": -0.2
+        "count": 297,
+        "rate": 13.98,
+        "deviation": 0.6
       },
       "21": {
         "count": 314,
-        "rate": 14.79,
-        "deviation": 17.8
+        "rate": 14.78,
+        "deviation": 17.6
       },
       "22": {
         "count": 298,
-        "rate": 14.04,
-        "deviation": 1.8
+        "rate": 14.03,
+        "deviation": 1.6
       },
       "23": {
         "count": 293,
-        "rate": 13.8,
-        "deviation": -3.2
+        "rate": 13.79,
+        "deviation": -3.4
       },
       "24": {
         "count": 307,
-        "rate": 14.46,
-        "deviation": 10.8
+        "rate": 14.45,
+        "deviation": 10.6
       },
       "25": {
         "count": 291,
-        "rate": 13.71,
-        "deviation": -5.2
+        "rate": 13.7,
+        "deviation": -5.4
       },
       "26": {
         "count": 311,
-        "rate": 14.65,
-        "deviation": 14.8
+        "rate": 14.64,
+        "deviation": 14.6
       },
       "27": {
         "count": 308,
-        "rate": 14.51,
-        "deviation": 11.8
+        "rate": 14.5,
+        "deviation": 11.6
       },
       "28": {
         "count": 298,
-        "rate": 14.04,
-        "deviation": 1.8
+        "rate": 14.03,
+        "deviation": 1.6
       },
       "29": {
-        "count": 278,
-        "rate": 13.09,
-        "deviation": -18.2
+        "count": 279,
+        "rate": 13.14,
+        "deviation": -17.4
       },
       "30": {
         "count": 296,
         "rate": 13.94,
-        "deviation": -0.2
+        "deviation": -0.4
       },
       "31": {
         "count": 285,
         "rate": 13.42,
-        "deviation": -11.2
+        "deviation": -11.4
       },
       "32": {
         "count": 298,
-        "rate": 14.04,
-        "deviation": 1.8
+        "rate": 14.03,
+        "deviation": 1.6
       },
       "33": {
         "count": 282,
         "rate": 13.28,
-        "deviation": -14.2
+        "deviation": -14.4
       },
       "34": {
         "count": 279,
         "rate": 13.14,
-        "deviation": -17.2
+        "deviation": -17.4
       },
       "35": {
         "count": 308,
-        "rate": 14.51,
-        "deviation": 11.8
+        "rate": 14.5,
+        "deviation": 11.6
       },
       "36": {
-        "count": 305,
-        "rate": 14.37,
-        "deviation": 8.8
+        "count": 306,
+        "rate": 14.41,
+        "deviation": 9.6
       },
       "37": {
-        "count": 318,
-        "rate": 14.98,
-        "deviation": 21.8
+        "count": 319,
+        "rate": 15.02,
+        "deviation": 22.6
       },
       "38": {
         "count": 312,
-        "rate": 14.7,
-        "deviation": 15.8
+        "rate": 14.69,
+        "deviation": 15.6
       },
       "39": {
         "count": 295,
-        "rate": 13.9,
-        "deviation": -1.2
+        "rate": 13.89,
+        "deviation": -1.4
       },
       "40": {
         "count": 284,
-        "rate": 13.38,
-        "deviation": -12.2
+        "rate": 13.37,
+        "deviation": -12.4
       },
       "41": {
-        "count": 278,
-        "rate": 13.09,
-        "deviation": -18.2
+        "count": 279,
+        "rate": 13.14,
+        "deviation": -17.4
       },
       "42": {
         "count": 317,
-        "rate": 14.93,
-        "deviation": 20.8
+        "rate": 14.92,
+        "deviation": 20.6
       },
       "43": {
         "count": 304,
-        "rate": 14.32,
-        "deviation": 7.8
+        "rate": 14.31,
+        "deviation": 7.6
       }
     },
     "top10": [
       {
         "number": 6,
-        "count": 327
+        "count": 328
       },
       {
         "number": 37,
-        "count": 318
+        "count": 319
       },
       {
         "number": 42,
@@ -280,11 +280,11 @@
       },
       {
         "number": 29,
-        "count": 278
+        "count": 279
       },
       {
         "number": 41,
-        "count": 278
+        "count": 279
       },
       {
         "number": 13,
@@ -377,12 +377,12 @@
         "count": 41
       },
       {
-        "number": 2,
+        "number": 19,
         "count": 41
       },
       {
-        "number": 19,
-        "count": 40
+        "number": 2,
+        "count": 41
       },
       {
         "number": 38,
@@ -391,8 +391,8 @@
     ]
   },
   "consecutive": {
-    "draws_with_consecutive": 1154,
-    "total_draws": 2123,
+    "draws_with_consecutive": 1155,
+    "total_draws": 2124,
     "rate": 54.4,
     "average_per_draw": 0.7,
     "distribution": {
@@ -401,7 +401,7 @@
         "rate": 45.6
       },
       "1": {
-        "count": 866,
+        "count": 867,
         "rate": 40.8
       },
       "2": {
@@ -436,12 +436,12 @@
         "odd": 2,
         "even": 4,
         "count": 515,
-        "rate": 24.3
+        "rate": 24.2
       },
       {
         "odd": 3,
         "even": 3,
-        "count": 698,
+        "count": 699,
         "rate": 32.9
       },
       {
@@ -481,14 +481,14 @@
       {
         "low": 2,
         "high": 4,
-        "count": 518,
+        "count": 519,
         "rate": 24.4
       },
       {
         "low": 3,
         "high": 3,
         "count": 742,
-        "rate": 35.0
+        "rate": 34.9
       },
       {
         "low": 4,
@@ -514,7 +514,7 @@
     "groups": [
       {
         "name": "1-9",
-        "count": 2650,
+        "count": 2651,
         "rate": 20.8,
         "expected_rate": 20.9
       },
@@ -526,19 +526,19 @@
       },
       {
         "name": "20-29",
-        "count": 2994,
+        "count": 2996,
         "rate": 23.5,
         "expected_rate": 23.3
       },
       {
         "name": "30-39",
-        "count": 2978,
+        "count": 2980,
         "rate": 23.4,
         "expected_rate": 23.3
       },
       {
         "name": "40-43",
-        "count": 1183,
+        "count": 1184,
         "rate": 9.3,
         "expected_rate": 9.3
       }
@@ -548,12 +548,12 @@
     "distribution": [
       {
         "tail": 0,
-        "count": 1183,
+        "count": 1184,
         "rate": 9.3
       },
       {
         "tail": 1,
-        "count": 1456,
+        "count": 1457,
         "rate": 11.4
       },
       {
@@ -578,12 +578,12 @@
       },
       {
         "tail": 6,
-        "count": 1241,
-        "rate": 9.7
+        "count": 1243,
+        "rate": 9.8
       },
       {
         "tail": 7,
-        "count": 1174,
+        "count": 1175,
         "rate": 9.2
       },
       {
@@ -593,8 +593,8 @@
       },
       {
         "tail": 9,
-        "count": 1140,
-        "rate": 8.9
+        "count": 1141,
+        "rate": 9.0
       }
     ]
   },
@@ -613,11 +613,6 @@
         "ratio": 1.9
       },
       {
-        "number": 3,
-        "count": 7,
-        "ratio": 1.7
-      },
-      {
         "number": 18,
         "count": 7,
         "ratio": 1.7
@@ -628,9 +623,19 @@
         "ratio": 1.7
       },
       {
+        "number": 36,
+        "count": 7,
+        "ratio": 1.7
+      },
+      {
         "number": 5,
         "count": 7,
         "ratio": 1.7
+      },
+      {
+        "number": 20,
+        "count": 6,
+        "ratio": 1.4
       },
       {
         "number": 21,
@@ -643,12 +648,7 @@
         "ratio": 1.4
       },
       {
-        "number": 36,
-        "count": 6,
-        "ratio": 1.4
-      },
-      {
-        "number": 2,
+        "number": 3,
         "count": 6,
         "ratio": 1.4
       }
@@ -659,11 +659,15 @@
         "count": 1
       },
       {
-        "number": 29,
-        "count": 1
+        "number": 7,
+        "count": 2
       },
       {
         "number": 10,
+        "count": 2
+      },
+      {
+        "number": 11,
         "count": 2
       },
       {
@@ -687,11 +691,7 @@
         "count": 2
       },
       {
-        "number": 31,
-        "count": 2
-      },
-      {
-        "number": 39,
+        "number": 24,
         "count": 2
       }
     ],
@@ -699,15 +699,15 @@
     "freq": {
       "1": 9,
       "2": 6,
-      "3": 7,
-      "4": 4,
+      "3": 6,
+      "4": 3,
       "5": 7,
-      "6": 4,
-      "7": 3,
+      "6": 5,
+      "7": 2,
       "8": 8,
       "9": 1,
       "10": 2,
-      "11": 3,
+      "11": 2,
       "12": 2,
       "13": 3,
       "14": 2,
@@ -716,28 +716,28 @@
       "17": 4,
       "18": 7,
       "19": 4,
-      "20": 5,
+      "20": 6,
       "21": 6,
       "22": 2,
       "23": 2,
-      "24": 3,
+      "24": 2,
       "25": 4,
       "26": 4,
       "27": 5,
       "28": 5,
-      "29": 1,
-      "30": 5,
+      "29": 2,
+      "30": 4,
       "31": 2,
       "32": 4,
       "33": 3,
       "34": 5,
       "35": 5,
-      "36": 6,
-      "37": 3,
+      "36": 7,
+      "37": 4,
       "38": 4,
       "39": 2,
       "40": 5,
-      "41": 3,
+      "41": 4,
       "42": 7,
       "43": 6
     }
@@ -747,221 +747,221 @@
       "1": {
         "avg_interval": 7.2,
         "max_interval": 47,
-        "current_interval": 0,
+        "current_interval": 1,
         "overdue": false
       },
       "2": {
         "avg_interval": 6.7,
         "max_interval": 47,
-        "current_interval": 0,
+        "current_interval": 1,
         "overdue": false
       },
       "3": {
         "avg_interval": 7.3,
         "max_interval": 45,
-        "current_interval": 2,
+        "current_interval": 3,
         "overdue": false
       },
       "4": {
         "avg_interval": 7.3,
         "max_interval": 34,
-        "current_interval": 0,
+        "current_interval": 1,
         "overdue": false
       },
       "5": {
         "avg_interval": 7.0,
         "max_interval": 30,
-        "current_interval": 5,
+        "current_interval": 6,
         "overdue": false
       },
       "6": {
         "avg_interval": 6.5,
         "max_interval": 45,
-        "current_interval": 7,
+        "current_interval": 0,
         "overdue": false
       },
       "7": {
         "avg_interval": 7.8,
         "max_interval": 42,
-        "current_interval": 6,
+        "current_interval": 7,
         "overdue": false
       },
       "8": {
         "avg_interval": 7.2,
         "max_interval": 53,
-        "current_interval": 3,
+        "current_interval": 4,
         "overdue": false
       },
       "9": {
         "avg_interval": 8.2,
         "max_interval": 51,
-        "current_interval": 13,
+        "current_interval": 14,
         "overdue": true
       },
       "10": {
         "avg_interval": 6.9,
         "max_interval": 51,
-        "current_interval": 2,
+        "current_interval": 3,
         "overdue": false
       },
       "11": {
         "avg_interval": 7.5,
         "max_interval": 35,
-        "current_interval": 8,
+        "current_interval": 9,
         "overdue": false
       },
       "12": {
         "avg_interval": 7.3,
         "max_interval": 40,
-        "current_interval": 1,
+        "current_interval": 2,
         "overdue": false
       },
       "13": {
         "avg_interval": 7.7,
         "max_interval": 39,
-        "current_interval": 3,
+        "current_interval": 4,
         "overdue": false
       },
       "14": {
         "avg_interval": 7.4,
         "max_interval": 36,
-        "current_interval": 3,
+        "current_interval": 4,
         "overdue": false
       },
       "15": {
         "avg_interval": 6.9,
         "max_interval": 44,
-        "current_interval": 1,
+        "current_interval": 2,
         "overdue": false
       },
       "16": {
         "avg_interval": 7.1,
         "max_interval": 35,
-        "current_interval": 3,
+        "current_interval": 4,
         "overdue": false
       },
       "17": {
         "avg_interval": 7.7,
         "max_interval": 45,
-        "current_interval": 2,
+        "current_interval": 3,
         "overdue": false
       },
       "18": {
         "avg_interval": 7.0,
         "max_interval": 33,
-        "current_interval": 1,
+        "current_interval": 2,
         "overdue": false
       },
       "19": {
         "avg_interval": 6.8,
         "max_interval": 37,
-        "current_interval": 14,
+        "current_interval": 15,
         "overdue": true
       },
       "20": {
         "avg_interval": 7.2,
         "max_interval": 59,
-        "current_interval": 4,
+        "current_interval": 0,
         "overdue": false
       },
       "21": {
         "avg_interval": 6.8,
         "max_interval": 41,
-        "current_interval": 1,
+        "current_interval": 2,
         "overdue": false
       },
       "22": {
         "avg_interval": 7.0,
         "max_interval": 35,
-        "current_interval": 4,
+        "current_interval": 5,
         "overdue": false
       },
       "23": {
         "avg_interval": 7.2,
         "max_interval": 64,
-        "current_interval": 9,
+        "current_interval": 10,
         "overdue": false
       },
       "24": {
         "avg_interval": 6.7,
         "max_interval": 41,
-        "current_interval": 23,
+        "current_interval": 24,
         "overdue": true
       },
       "25": {
         "avg_interval": 7.3,
         "max_interval": 37,
-        "current_interval": 0,
+        "current_interval": 1,
         "overdue": false
       },
       "26": {
         "avg_interval": 6.8,
         "max_interval": 35,
-        "current_interval": 1,
+        "current_interval": 2,
         "overdue": false
       },
       "27": {
         "avg_interval": 6.9,
         "max_interval": 36,
-        "current_interval": 6,
+        "current_interval": 7,
         "overdue": false
       },
       "28": {
         "avg_interval": 7.1,
         "max_interval": 43,
-        "current_interval": 15,
+        "current_interval": 16,
         "overdue": true
       },
       "29": {
-        "avg_interval": 7.5,
+        "avg_interval": 7.6,
         "max_interval": 42,
-        "current_interval": 22,
-        "overdue": true
+        "current_interval": 0,
+        "overdue": false
       },
       "30": {
         "avg_interval": 7.2,
         "max_interval": 54,
-        "current_interval": 4,
+        "current_interval": 5,
         "overdue": false
       },
       "31": {
         "avg_interval": 7.4,
         "max_interval": 45,
-        "current_interval": 11,
-        "overdue": false
+        "current_interval": 12,
+        "overdue": true
       },
       "32": {
         "avg_interval": 7.1,
         "max_interval": 55,
-        "current_interval": 1,
+        "current_interval": 2,
         "overdue": false
       },
       "33": {
         "avg_interval": 7.5,
         "max_interval": 45,
-        "current_interval": 9,
+        "current_interval": 10,
         "overdue": false
       },
       "34": {
         "avg_interval": 7.6,
         "max_interval": 39,
-        "current_interval": 8,
+        "current_interval": 9,
         "overdue": false
       },
       "35": {
         "avg_interval": 6.9,
         "max_interval": 41,
-        "current_interval": 5,
+        "current_interval": 6,
         "overdue": false
       },
       "36": {
         "avg_interval": 7.0,
         "max_interval": 47,
-        "current_interval": 5,
+        "current_interval": 0,
         "overdue": false
       },
       "37": {
-        "avg_interval": 6.7,
+        "avg_interval": 6.6,
         "max_interval": 41,
         "current_interval": 0,
         "overdue": false
@@ -969,70 +969,70 @@
       "38": {
         "avg_interval": 6.8,
         "max_interval": 34,
-        "current_interval": 4,
+        "current_interval": 5,
         "overdue": false
       },
       "39": {
         "avg_interval": 7.1,
         "max_interval": 65,
-        "current_interval": 16,
+        "current_interval": 17,
         "overdue": true
       },
       "40": {
         "avg_interval": 7.5,
         "max_interval": 35,
-        "current_interval": 0,
+        "current_interval": 1,
         "overdue": false
       },
       "41": {
         "avg_interval": 7.6,
         "max_interval": 40,
-        "current_interval": 6,
+        "current_interval": 0,
         "overdue": false
       },
       "42": {
         "avg_interval": 6.7,
         "max_interval": 47,
-        "current_interval": 7,
+        "current_interval": 8,
         "overdue": false
       },
       "43": {
         "avg_interval": 7.0,
         "max_interval": 33,
-        "current_interval": 3,
+        "current_interval": 4,
         "overdue": false
       }
     },
     "overdue_top5": [
       {
         "number": 24,
-        "current": 23,
+        "current": 24,
         "avg": 6.7,
-        "ratio": 3.4
-      },
-      {
-        "number": 29,
-        "current": 22,
-        "avg": 7.5,
-        "ratio": 2.9
+        "ratio": 3.6
       },
       {
         "number": 39,
-        "current": 16,
+        "current": 17,
         "avg": 7.1,
-        "ratio": 2.2
-      },
-      {
-        "number": 19,
-        "current": 14,
-        "avg": 6.8,
-        "ratio": 2.1
+        "ratio": 2.4
       },
       {
         "number": 28,
-        "current": 15,
+        "current": 16,
         "avg": 7.1,
-        "ratio": 2.1
+        "ratio": 2.3
+      },
+      {
+        "number": 19,
+        "current": 15,
+        "avg": 6.8,
+        "ratio": 2.2
+      },
+      {
+        "number": 9,
+        "current": 14,
+        "avg": 8.2,
+        "ratio": 1.7
       }
     ],
     "intervals": {
@@ -2862,7 +2862,8 @@
         7,
         8,
         3,
-        7
+        7,
+        8
       ],
       "7": [
         13,
@@ -6933,7 +6934,8 @@
         2,
         17,
         2,
-        3
+        3,
+        5
       ],
       "21": [
         3,
@@ -9640,7 +9642,8 @@
         2,
         10,
         10,
-        8
+        8,
+        23
       ],
       "30": [
         18,
@@ -11700,7 +11703,8 @@
         2,
         3,
         3,
-        5
+        5,
+        6
       ],
       "37": [
         2,
@@ -12019,7 +12023,8 @@
         3,
         19,
         7,
-        5
+        5,
+        1
       ],
       "38": [
         3,
@@ -13192,7 +13197,8 @@
         5,
         19,
         9,
-        8
+        8,
+        7
       ],
       "42": [
         1,
@@ -13819,49 +13825,49 @@
       ]
     },
     "current": {
-      "1": 0,
-      "2": 0,
-      "3": 2,
-      "4": 0,
-      "5": 5,
-      "6": 7,
-      "7": 6,
-      "8": 3,
-      "9": 13,
-      "10": 2,
-      "11": 8,
-      "12": 1,
-      "13": 3,
-      "14": 3,
-      "15": 1,
-      "16": 3,
-      "17": 2,
-      "18": 1,
-      "19": 14,
-      "20": 4,
-      "21": 1,
-      "22": 4,
-      "23": 9,
-      "24": 23,
-      "25": 0,
-      "26": 1,
-      "27": 6,
-      "28": 15,
-      "29": 22,
-      "30": 4,
-      "31": 11,
-      "32": 1,
-      "33": 9,
-      "34": 8,
-      "35": 5,
-      "36": 5,
+      "1": 1,
+      "2": 1,
+      "3": 3,
+      "4": 1,
+      "5": 6,
+      "6": 0,
+      "7": 7,
+      "8": 4,
+      "9": 14,
+      "10": 3,
+      "11": 9,
+      "12": 2,
+      "13": 4,
+      "14": 4,
+      "15": 2,
+      "16": 4,
+      "17": 3,
+      "18": 2,
+      "19": 15,
+      "20": 0,
+      "21": 2,
+      "22": 5,
+      "23": 10,
+      "24": 24,
+      "25": 1,
+      "26": 2,
+      "27": 7,
+      "28": 16,
+      "29": 0,
+      "30": 5,
+      "31": 12,
+      "32": 2,
+      "33": 10,
+      "34": 9,
+      "35": 6,
+      "36": 0,
       "37": 0,
-      "38": 4,
-      "39": 16,
-      "40": 0,
-      "41": 6,
-      "42": 7,
-      "43": 3
+      "38": 5,
+      "39": 17,
+      "40": 1,
+      "41": 0,
+      "42": 8,
+      "43": 4
     }
   },
   "carryover": {
@@ -13874,7 +13880,7 @@
       },
       {
         "overlap": 1,
-        "count": 972,
+        "count": 973,
         "rate": 45.8
       },
       {
@@ -13927,8 +13933,8 @@
       },
       {
         "range": "145-175",
-        "count": 536,
-        "rate": 25.2
+        "count": 537,
+        "rate": 25.3
       },
       {
         "range": "176-206",
@@ -14377,6 +14383,6 @@
         "ratio": 1.3
       }
     ],
-    "pair_expected": 35.26578073089701
+    "pair_expected": 35.28239202657807
   }
 }
